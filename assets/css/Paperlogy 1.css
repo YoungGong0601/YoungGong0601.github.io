@@ -1,0 +1,8 @@
+@font-face {
+	font-family: 'Paperlogy 1';
+	src: url(../../assets/fonts/Paperlogy%201-6bb3dba0c3b66f95e97d2b99f95b936d.woff2) format('woff2'),
+	url(../../assets/fonts/Paperlogy%201-a5006c634469b6c7a1e0df78885574ba.woff) format('woff');
+	font-weight: 100;
+	font-style: normal;
+	font-display: swap;
+}

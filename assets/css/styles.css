@@ -1,0 +1,22 @@
+.neon-btn {
+  background: linear-gradient(45deg, #00f2c3, #0099ff, #00f2c3);
+  background-size: 200%;
+  color: black;
+  font-weight: bold;
+  border: none;
+  transition: 0.5s;
+}
+
+/* 2. 마우스를 올렸을 때 (Hover): 배경 위치를 이동 */
+
+.neon-btn:hover {
+  background-position: right center;
+  color: white;
+}
+
+/* 3. 클릭했을 때 (Active): 살짝 작아지는 느낌 */
+
+.neon-btn:active {
+  transform: scale(0.98);
+}
+
