@@ -78,6 +78,6 @@
 /* 4. 마우스 올렸을 때 효과 */
 
 ::-webkit-scrollbar-thumb:hover {
-  background-position: right center;
+  background: #00f2ffd5;
 }
 
