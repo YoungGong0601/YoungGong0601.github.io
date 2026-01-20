@@ -17,6 +17,67 @@
 /* 3. 클릭했을 때 (Active): 살짝 작아지는 느낌 */
 
 .neon-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.88);
+}
+
+/* ====================================================== */
+
+.transparent-btn {
+  background: linear-gradient(45deg, #00f2c3, #0099ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: bold;
+}
+
+/* ====================================================== */
+
+/* 처음 상태: 꽤 흐릿하게 설정 (픽셀 값은 조절 가능) */
+
+.scroll-blur-img {
+  filter: blur(20px);
+  will-change: filter;
+}
+
+/* 평소 상태 (부드러운 전환을 위해 추가) */
+
+.navbar {
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* 스크롤 내렸을 때 적용될 스타일 */
+
+.navbar-scrolled {
+  background-color: #000000AA !important;
+  border-bottom: 1px solid #00f2ffa0;
+  box-shadow: 0 4px 15px rgba(0, 242, 255, 0.2);
+}
+
+/* ====================================================== */
+
+/* 1. 전체 너비 설정 */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 2. 스크롤바 뒷배경 (트랙) */
+
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+/* 3. 실제로 움직이는 손잡이 (썸) */
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00f2ff, #004d40);
+  border-radius: 10px;
+  border: 1px solid #111111;
+}
+
+/* 4. 마우스 올렸을 때 효과 */
+
+::-webkit-scrollbar-thumb:hover {
+  background-position: right center;
 }
 
