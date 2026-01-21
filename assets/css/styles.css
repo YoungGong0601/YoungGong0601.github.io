@@ -48,7 +48,7 @@
 /* 스크롤 내렸을 때 적용될 스타일 */
 
 .navbar-scrolled {
-  background-color: #000000AA !important;
+  background-color: #000000aa !important;
   border-bottom: 1px solid #00f2ffa0;
   box-shadow: 0 4px 15px rgba(0, 242, 255, 0.2);
 }
@@ -79,5 +79,91 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #00f2ffd5;
+}
+
+/* ====================================================== */
+
+/* 1. 터널: 화면 밖으로 나간 기차를 숨김 */
+
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  background: #eee;
+  padding: 20px 0;
+}
+
+/* 2. 레일: 이미지들을 옆으로 일렬로 세움 */
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+}
+
+/* 3. 게임 이미지들: 크기 통일 및 간격 조정 */
+
+.game-img {
+  height: 200px;
+  width: auto;
+  margin-right: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+}
+
+/* ---- */
+
+/* 1. 기차 한 칸 (카드) 디자인 */
+
+.game-card {
+  width: 280px;
+  margin-right: 20px;
+  flex-shrink: 0;
+  background-color: transparent;
+  border-radius: 6px;
+  overflow: hidden;
+  text-align: center;
+  /*border: 1px solid #333;*/
+  /*padding-bottom: 5px;*/
+}
+
+/* 2. 카드 안의 이미지 */
+
+.game-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  margin-bottom: 5px;
+}
+
+/* 3. 카드 안의 텍스트 */
+
+.game-card h4 {
+  color: #fff;
+  font-size: 0.5rem;
+  /*margin-bottom: 0px;*/
+}
+
+/* 4. 확대보기 버튼 (Link) */
+
+.game-card .btn-zoom {
+  display: inline-block;
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid #00f2ff;
+  color: #00f2ff;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+
+.game-card .btn-zoom:hover {
+  background: #00f2ff;
+  color: #000;
+}
+
+/* ====================================================== */
+
+.floating-deco {
+  pointer-events: none;
 }
 
