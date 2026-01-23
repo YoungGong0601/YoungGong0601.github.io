@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Portfolio</title>
+    <title>Portfolio_recent</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/Paperlogy%201.css">
     <link rel="stylesheet" href="assets/css/Paperlogy%202.css">
@@ -46,8 +46,10 @@
                 <h1>Portfolio</h1>
                 <p>사이트 제작중입니다. 자세한 것은&nbsp;<strong>Notion</strong>을 이용해 주세요!</p><a class="btn btn-primary swing animated neon-btn" role="button" href="https://younggong0601.notion.site/Me-2e495708e15a80abb22aee1965b58cf7?source=copy_link" style="margin: auto;margin-top: 30px;width: 150px;font-size: 30px;">Notion</a>
             </div>
-        </div>
-        <div class="bg-black parallax-placeholder" style="background-image:url(&quot;assets/img/Games/InfidO/InfidO_Gameplay.gif&quot;);"></div>
+        </div><video class="parallax-background" autoplay="" loop="" muted="">
+            <source src="assets/img/Videos/1.mp4" type="video/mp4" wp-acf="[{'type':'url','name':'video','label':'Video','wrapper':{'width':25}},{'type':'text','name':'video_css','label':'Video CSS (eg. filters)','wrapper':{'width':25}}]" wp-attr="[{'target':'src','replace':'%1'},{'target':'parent_style','replace':'%2'}]">
+        </video>
+        <div class="bg-black parallax-placeholder"></div>
     </div>
     <section style="position: relative;padding-top: 70px;overflow: visible;">
         <div class="parallax floating-deco" style="width: 100px;height: 100px;background: rgba(255,255,255,0.65);border-radius: 50%;position: absolute;left: 4%;Top: 30%;transform: scale(1.30);" data-speed="-0.2"></div>
@@ -99,7 +101,7 @@
                         <h4>Tech Stack</h4>
                         <p style="text-align: left;">- 유니티 2D&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ★★★★<br>- 유니티 3D&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ★★★☆<br>- C#&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;★★★★<br>- Python&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;★★☆☆<br>- HTML / CSS&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ★☆☆☆</p>
                         <h4 style="margin-top: 30px;">핵심 역량</h4>
-                        <p>Core Competencies</p><img class="img-fluid" src="assets/img/Sample/Test_6graph.png" style="width: 230px;background-image: url(&quot;Sample/doking.gif&quot;);background-position: center;background-size: cover;">
+                        <p>Core Competencies</p><img class="img-fluid" src="assets/img/Sample/Test_6graph.png" style="width: 230px; background-position: center;background-size: cover;">
                     </div><a href="#">Learn More&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-right">
                             <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"></path>
                         </svg></a>
@@ -184,49 +186,84 @@
             </div>
         </div>
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3">
-            <div class="col" data-aos="fade-up" data-aos-duration="800" style="position: relative;">
-                <div class="card" style="box-shadow: 0px 0px 20px var(--bs-primary-bg-subtle);"><img class="object-fit-cover card-img-top w-100 d-block" style="height: 200px;" src="assets/img/Games/BlackWhite/BlackWhite_title.png">
-                    <div class="card-body p-4">
-                        <p class="text-primary mb-0 card-text">Solo Development</p>
-                        <h4 class="card-title">BlackWhiteTimeAttack</h4>
-                        <p class="card-text">제한 시간 내에 마지막 스테이지까지 도달하는 타임어택 게임입니다.&nbsp;맵이 바뀔 때 나타나는 원형 흑백 전환 효과와, 개성 있는 스테이지들을 연속으로 돌파하는 재미를 포인트로 제작했습니다.</p>
-                        <div class="d-flex"><img class="rounded-circle object-fit-cover flex-shrink-0 me-3" width="50" height="50" src="assets/img/Sample/SampleImage.jpg">
-                            <div>
-                                <p class="fw-bold mb-0">Solo Development</p>
-                                <p class="text-muted mb-0">Solo Development</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100" style="position: relative;">
-                <div class="card" style="box-shadow: 0px 0px 20px var(--bs-primary-bg-subtle);"><img class="object-fit-cover card-img-top w-100 d-block" style="height: 200px;" src="assets/img/Games/InfidO/InfidO_title.png">
-                    <div class="card-body p-4">
+            <div class="col hover-zindex" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100" style="position: relative;">
+                <div class="card hover-scale" style="box-shadow: 0px 0px 20px var(--bs-primary-bg-subtle);border: 2.4px solid var(--bs-info) ; --scale-amt:1.1;">
+                    <div class="change-img-box" style="height: 200px;overflow: hidden;border-radius: 4px;"><img class="object-fit-cover w-100 img-hover" style="height: 200px;position: absolute;border-radius: 4px;" src="assets/img/Games/InfidO/InfidO_Gameplay.gif"><img class="object-fit-cover w-100 img-base" width="2066" height="1377" style="height: 200px;border-radius: 4px;" src="assets/img/Games/InfidO/InfidO_title.png"></div>
+                    <div class="card-body p-4" style="border-color: rgb(91,255,216);">
                         <p class="text-primary mb-0 card-text">Developer</p>
                         <h4 class="card-title">인피도 ( InfidO )</h4>
                         <p class="card-text">《 InfidO 》는 도시를 부정하는 배교자 로봇이 되어 돌진과 무기 공격으로 적들을 박살내는 로그라이크 스피드 액션 플랫포머입니다. 멈추지 않는 전투로봇을 조종해 적과 연쇄 충돌하고 무기를 탈취해 반격하며 스테이지를 돌파하세요. 전투 프로토콜을 업그레이드하고 거대한 보스를 쓰러뜨리며 나아가 기업의 흑막과 도시의 비밀을 밝혀내세요.</p>
                         <div class="d-flex"><img class="rounded-circle object-fit-cover flex-shrink-0 me-3" width="50" height="50" src="assets/img/Games/InfidO/shabo%20folder.png">
                             <div>
                                 <p class="fw-bold mb-0">Team Mano</p>
-                                <p class="text-muted mb-0">기획2, 개발3, 아트3, 마케팅1</p>
+                                <p class="text-muted mb-0">기획2, <span style="text-decoration: underline;">개발</span>3, 아트3, 마케팅1</p>
                             </div>
                         </div>
-                    </div>
-                </div><a class="stretched-link" href="project.html"></a>
+                    </div><a class="stretched-link" href="project.html"></a>
+                </div>
             </div>
-            <div class="col" data-aos="fade-up" data-aos-duration="800" data-aos-delay="150" style="position: relative;">
-                <div class="card" style="box-shadow: 0px 0px 20px var(--bs-primary-bg-subtle);"><img class="object-fit-cover card-img-top w-100 d-block" style="height: 200px;" src="assets/img/Games/KFOOD/KFOOD_Title.png">
-                    <div class="card-body p-4">
+            <div class="col hover-zindex" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100" style="position: relative;">
+                <div class="card hover-scale" style="box-shadow: 0px 0px 20px var(--bs-primary-bg-subtle);--scale-amt: 1.1;border-width: 0px;border-color: var(--bs-info);">
+                    <div class="change-img-box" style="height: 200px;overflow: hidden;border-radius: 4px;"><img class="object-fit-cover w-100 img-hover" style="height: 200px;position: absolute;border-radius: 4px;" src="assets/img/Games/KFOOD/KFOOD_Gameplay_low.gif"><img class="object-fit-cover w-100 img-base" width="3840" height="2160" style="height: 200px;border-radius: 4px;" src="assets/img/Games/KFOOD/KFOOD_Title.png"></div>
+                    <div class="card-body p-4" style="border-color: rgb(91,255,216);">
                         <p class="text-primary mb-0 card-text">Game Designer</p>
                         <h4 class="card-title">Give me The K-FOOD</h4>
                         <p class="card-text">아포칼립스 좀비 세계에서 차를 타고 도망치는 요리사. 차량 내부에서 음식을 만들고 굶주린 좀비에게 던지고 도망쳐라!<br><br>슈의 라면가게와 디펜스를 합친 게임</p>
                         <div class="d-flex"><img class="rounded-circle object-fit-cover flex-shrink-0 me-3" width="50" height="50" src="assets/img/Games/KFOOD/lamen_logo.png">
                             <div>
                                 <p class="fw-bold mb-0">Team 라면이거덩요</p>
-                                <p class="text-muted mb-0">기획1, 개발3, 아트</p>
+                                <p class="text-muted mb-0"><span style="text-decoration: underline;">기획</span>1, 개발3, 아트1</p>
                             </div>
                         </div>
-                    </div>
+                    </div><a class="stretched-link" href="project.html"></a>
+                </div>
+            </div>
+            <div class="col hover-zindex" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100" style="position: relative;">
+                <div class="card hover-scale" style="box-shadow: 0px 0px 20px var(--bs-primary-bg-subtle);--scale-amt: 1.1;border-width: 0px;border-color: var(--bs-info);">
+                    <div class="change-img-box" style="height: 200px;overflow: hidden;border-radius: 4px;"><img class="object-fit-cover w-100 img-hover" style="height: 200px;position: absolute;border-radius: 4px;" src="assets/img/Games/BlackWhite/BlackWhite_GP.gif"><img class="object-fit-cover w-100 img-base" width="2159" height="1184" style="height: 200px;border-radius: 4px;" src="assets/img/Games/BlackWhite/BlackWhite_title.png"></div>
+                    <div class="card-body p-4" style="border-color: rgb(91,255,216);">
+                        <p class="text-primary mb-0 card-text">Solo Development</p>
+                        <h4 class="card-title">BlackWhiteTimeAttack</h4>
+                        <p class="card-text">제한 시간 내에 마지막 스테이지까지 도달하는 타임어택 게임.&nbsp;<br><br>맵이 바뀔 때 나타나는 원형 흑백 전환 효과와, 개성 있는 스테이지들을 연속으로 돌파하는 재미를 포인트로 제작했습니다.</p>
+                        <div class="d-flex"><img class="rounded-circle object-fit-cover flex-shrink-0 me-3" width="50" height="50" src="assets/img/Sample/SampleImage.jpg">
+                            <div>
+                                <p class="fw-bold mb-0"><strong>Solo Development</strong></p>
+                                <p class="text-muted mb-0">Solo Development</p>
+                            </div>
+                        </div>
+                    </div><a class="stretched-link" href="project.html"></a>
+                </div>
+            </div>
+            <div class="col hover-zindex" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100" style="position: relative;">
+                <div class="card hover-scale" style="box-shadow: 0px 0px 20px var(--bs-primary-bg-subtle);--scale-amt: 1.1;border-width: 0px;border-color: var(--bs-info);">
+                    <div class="change-img-box" style="height: 200px;overflow: hidden;border-radius: 4px;"><img class="object-fit-cover w-100 img-hover" style="height: 200px;position: absolute;border-radius: 4px;" src="assets/img/Games/Tetris/Tetris_Gameplay_low.gif"><img class="object-fit-cover w-100 img-base" width="682" height="316" style="height: 200px;border-radius: 4px;" src="assets/img/Games/Tetris/Tetris_Title.png"></div>
+                    <div class="card-body p-4" style="border-color: rgb(91,255,216);">
+                        <p class="text-primary mb-0 card-text">Solo Development</p>
+                        <h4 class="card-title">T^etris</h4>
+                        <p class="card-text">간단한 테트리스에 블럭을 마구 옮기는 적이 추가된 버전<br><br>평범한 테트리스게임 입니다만... 내 아름다운 빌드가 망쳐지잖아!</p>
+                        <div class="d-flex"><img class="rounded-circle object-fit-cover flex-shrink-0 me-3" width="50" height="50" src="assets/img/Sample/SampleImage.jpg">
+                            <div>
+                                <p class="fw-bold mb-0"><strong>Solo Development</strong></p>
+                                <p class="text-muted mb-0">Solo Development</p>
+                            </div>
+                        </div>
+                    </div><a class="stretched-link" href="project.html"></a>
+                </div>
+            </div>
+            <div class="col hover-zindex" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100" style="position: relative;">
+                <div class="card hover-scale" style="box-shadow: 0px 0px 20px var(--bs-primary-bg-subtle);--scale-amt: 1.1;border-width: 0px;border-color: var(--bs-info);">
+                    <div class="change-img-box" style="height: 200px;overflow: hidden;border-radius: 4px;"><img class="object-fit-cover w-100 img-hover" style="height: 200px;position: absolute;border-radius: 4px;" src="assets/img/Games/PATH/PATH_2stage.png"><img class="object-fit-cover w-100 img-base" width="1372" height="767" style="height: 200px;border-radius: 4px;" src="assets/img/Games/PATH/PATH_Title.png"></div>
+                    <div class="card-body p-4" style="border-color: rgb(91,255,216);">
+                        <p class="text-primary mb-0 card-text">Developer</p>
+                        <h4 class="card-title">PATH</h4>
+                        <p class="card-text">마우스를 보고 직진하는 캐릭터를 도착지점에 도달시키는 게임.<br>마우스는 흰색을, 캐릭터는 황토색에 부딪치지 않아야 한다. 다양한 기믹에 도전하는 재미를 포인트로 제작하였습니다.</p>
+                        <div class="d-flex"><img class="rounded-circle object-fit-cover flex-shrink-0 me-3" width="50" height="50" src="assets/img/Games/PATH/Character.png">
+                            <div>
+                                <p class="fw-bold mb-0">Team PATH</p>
+                                <p class="text-muted mb-0">기획2,&nbsp;<span style="text-decoration: underline;">개발</span>1</p>
+                            </div>
+                        </div>
+                    </div><a class="stretched-link" href="project.html"></a>
                 </div>
             </div>
         </div>
@@ -255,6 +292,8 @@
     <script src="assets/js/aos.min.js"></script>
     <script src="assets/js/bs-init.js"></script>
     <script src="assets/js/BlurImage_ani.js"></script>
+    <script src="assets/js/HoverGifReset.js"></script>
+    <script src="assets/js/HoverScale.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="assets/js/Lightbox-Gallery-No-Gutters-baguetteBox.min.js"></script>

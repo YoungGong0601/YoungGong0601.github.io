@@ -167,3 +167,71 @@
   pointer-events: none;
 }
 
+/* ====================================================== */
+
+/* 1. 이미지들을 가두는 상자 */
+
+.change-img-box {
+  position: relative;
+  /*width: 300px;*/
+  /*height: 200px;*/
+  /*overflow: hidden;*/
+}
+
+/* 2. 모든 이미지 공통 설정 */
+
+.change-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.5s ease;
+  z-index: 5;
+  /*pointer-events: none;*/
+}
+
+/* 3. 기본 사진 (뒤에 깔려있음) */
+
+.img-base {
+}
+
+/* 4. 바뀔 사진 (평소에는 숨김) */
+
+.img-hover {
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+/* 5. 마우스 올렸을 때 효과 (핵심 ✨) */
+
+.change-img-box:hover .img-hover {
+  opacity: 1;
+}
+
+/* ========================================================= */
+
+.hover-scale {
+  transition: transform 0.1s ease;
+  position: relative;
+  display: block;
+}
+
+.hover-scale:hover {
+  transform: scale(var(--scale-amt, 1.05)) !important;
+  /*z-index: 98 !important;*/
+}
+
+.hover-scale:active {
+  transform: scale(calc(var(--scale-amt, 1.05) - 0.1)) !important;
+  /*z-index: 98 !important;*/
+}
+
+.hover-zindex {
+  position: relative;
+}
+
+.hover-zindex:hover {
+  position: relative;
+  z-index: 1 !important;
+}
+
