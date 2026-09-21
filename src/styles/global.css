@@ -164,3 +164,23 @@ hr {
     /* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
     white-space: nowrap;
 }
+/* 네이티브 스크롤바를 숨기고 오버레이 썸을 직접 그림 (BaseHead.astro) */
+html {
+    scrollbar-width: none;
+}
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+#scroll-overlay {
+    position: fixed;
+    top: 0;
+    right: 3px;
+    width: 6px;
+    border-radius: 3px;
+    background: rgba(var(--gray), 55%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    z-index: 100;
+}

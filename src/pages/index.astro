@@ -3,67 +3,70 @@ import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+const NOTION_URL =
+    "https://younggong0601.notion.site/_-3d895708e15a80648c7bf4d2957ce5f7";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="ko">
     <head>
         <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
     </head>
     <body>
         <Header />
         <main>
-            <h1>🧑‍🚀 홍령기 - 블로그 본체는 claude로 디자인 예정...!</h1>
-            <p>
-                Welcome to the official <a href="https://astro.build/">Astro</a> blog
-                starter template. This template serves as a lightweight, minimally-styled
-                starting point for anyone looking to build a personal website, blog,
-                or portfolio with Astro.
-            </p>
-            <p>
-                This template comes with a few integrations already configured
-                in your{" "}
-                <code>astro.config.mjs</code> file. You can customize your setup with{
-                    " "
-                }
-                <a href="https://astro.build/integrations">Astro Integrations</a
-                > to add tools like Tailwind, React, or Vue to your project.
-            </p>
-            <p>Here are a few ideas on how to get started with the template:</p>
-            <ul>
-                <li>Edit this page in <code>src/pages/index.astro</code></li>
-                <li>
-                    Edit the site header items in <code
-                        >src/components/Header.astro</code>
-                </li>
-                <li>
-                    Add your name to the footer in <code
-                        >src/components/Footer.astro</code>
-                </li>
-                <li>
-                    Check out the included blog posts in <code
-                        >src/content/blog/</code>
-                </li>
-                <li>
-                    Customize the blog post page layout in <code
-                        >src/layouts/BlogPost.astro</code>
-                </li>
-            </ul>
-            <p>
-                Have fun! If you get stuck, remember to{" "}
-                <a href="https://docs.astro.build/">read the docs</a>{" "}
-                or <a href="https://astro.build/chat">join us on Discord</a> to ask
-                questions.
-            </p>
-            <p>
-                Looking for a blog template with a bit more personality? Check
-                out{" "}
-                <a href="https://github.com/Charca/astro-blog-template"
-                    >astro-blog-template</a
-                >{" "}
-                by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-            </p>
+            <h1>홍령기</h1>
+            <a class="cta" href={NOTION_URL} target="_blank" rel="noopener">
+                <span class="cta-label">Portfolio</span>
+                <span class="cta-title">작업물 보러 가기</span>
+                <span class="cta-arrow" aria-hidden="true">→</span>
+            </a>
         </main>
         <Footer />
     </body>
 </html>
+
+<style>
+    .cta {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 0.2em 1em;
+        margin: 2em 0;
+        padding: 1.4em 1.6em;
+        border-radius: 14px;
+        text-decoration: none;
+        color: #fff;
+        background:
+            radial-gradient(
+                120% 140% at 0% 0%,
+                rgb(var(--gray-dark)) 0%,
+                transparent 60%
+            ),
+            linear-gradient(45deg, var(--accent), var(--accent-dark));
+        box-shadow: var(--box-shadow);
+        transition: filter 0.2s ease;
+    }
+    .cta:hover {
+        filter: brightness(1.12);
+    }
+    .cta-label {
+        grid-column: 1;
+        font-size: 0.7em;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        opacity: 0.75;
+    }
+    .cta-title {
+        grid-column: 1;
+        font-size: 1.15em;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+    .cta-arrow {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        font-size: 1.6em;
+    }
+</style>
