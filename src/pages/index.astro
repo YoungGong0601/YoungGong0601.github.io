@@ -39,6 +39,14 @@ const shortcuts = [
         label: "포트폴리오",
         href: "https://younggong0601.notion.site/_-3d895708e15a80648c7bf4d2957ce5f7",
         external: true,
+        primary: false,
+    },
+    // primary 는 강조색으로 채운다. 이 사이트의 본진이라 눈에 먼저 들어와야 한다.
+    {
+        label: "DEVLOG",
+        href: getRelativeLocaleUrl(locale, "posts"),
+        external: false,
+        primary: true,
     },
     // { label: "준비 중", href: null },
     // { label: "준비 중", href: null },
@@ -169,7 +177,7 @@ const lastUpdatedText = lastUpdated
                 }
             </dl>
 
-            <div class="mt-7 flex flex-wrap items-center gap-3">
+            <div class="mt-7 grid grid-cols-2 gap-3">
                 {
                     shortcuts.map(item =>
                         item.href ? (
@@ -177,12 +185,25 @@ const lastUpdatedText = lastUpdated
                                 href={item.href}
                                 target={item.external ? "_blank" : null}
                                 rel={item.external ? "noopener noreferrer" : null}
-                                class="border-border hover:border-accent hover:text-accent border px-4 py-2 text-sm transition-colors duration-300"
+                                class:list={[
+                                    "group flex items-center justify-center gap-1.5 border px-4 py-2 text-center text-sm transition-colors duration-300",
+                                    item.primary
+                                        ? "border-accent bg-accent text-accent-foreground hover:text-accent font-medium tracking-wide hover:bg-transparent"
+                                        : "border-border hover:border-accent hover:text-accent",
+                                ]}
                             >
                                 {item.label}
+                                {item.primary && (
+                                    <span
+                                        aria-hidden="true"
+                                        class="transition-transform duration-300 group-hover:translate-x-1"
+                                    >
+                                        →
+                                    </span>
+                                )}
                             </a>
                         ) : (
-                            <span class="border-border text-muted-foreground cursor-default border border-dashed px-4 py-2 text-sm">
+                            <span class="border-border text-muted-foreground cursor-default border border-dashed px-4 py-2 text-center text-sm">
                                 {item.label}
                             </span>
                         )

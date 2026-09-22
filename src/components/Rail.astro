@@ -8,7 +8,8 @@ type Props = {
 
 const { side, label } = Astro.props;
 
-const railStart = "max(1rem, calc(50vw - 24rem - 15.25rem))";
+// 11rem(레일 폭) + 2.25rem(본문과의 간격)
+const railStart = "max(1rem, calc(50vw - 24rem - 13.25rem))";
 const position =
   side === "start"
     ? `inset-inline-start: ${railStart}`
@@ -17,7 +18,7 @@ const position =
 
 <aside
   class:list={[
-    "rail fixed top-32 bottom-10 w-52 overflow-hidden overscroll-contain",
+    "rail fixed top-32 bottom-10 w-44 overflow-hidden overscroll-contain",
     side === "start" ? "rail-start" : "rail-end",
   ]}
   style={position}
