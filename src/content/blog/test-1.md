@@ -1,7 +1,11 @@
 ---
 title: "test: 테스트 글 1"
-description: "목록·정렬·RSS 확인용 테스트 글 1 입니다."
-pubDate: 2026-09-16
+description: "목록과 정렬 확인용 테스트 글 1 입니다."
+pubDatetime: 2026-09-16
+tags:
+  - astro
+  - 프론트엔드
+  - css
 ---
 
 ## 테스트 글 1

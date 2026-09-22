@@ -1,7 +1,10 @@
 ---
 title: "test: 테스트 글 2"
-description: "목록·정렬·RSS 확인용 테스트 글 2 입니다."
-pubDate: 2026-09-17
+description: "목록과 정렬 확인용 테스트 글 2 입니다."
+pubDatetime: 2026-09-17
+tags:
+  - astro
+  - 타입스크립트
 ---
 
 ## 테스트 글 2

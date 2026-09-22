@@ -1,0 +1,91 @@
+---
+// MDX 안에서 쓰는 버튼 예제. 프레임워크 없이 스크립트로만 동작한다.
+type Props = {
+  start?: number;
+  step?: number;
+  label?: string;
+};
+
+const { start = 0, step = 1, label = "카운터" } = Astro.props;
+---
+
+<div class="counter" data-counter data-start={start} data-step={step}>
+  <span class="counter-label">{label}</span>
+  <button type="button" data-dec aria-label="줄이기">−</button>
+  <output data-value>{start}</output>
+  <button type="button" data-inc aria-label="늘리기">+</button>
+  <button type="button" data-reset>초기화</button>
+</div>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const roots =
+      document.querySelectorAll<HTMLElement>("[data-counter]:not([data-bound])");
+
+    for (const root of roots) {
+      root.dataset.bound = "true";
+
+      const output = root.querySelector<HTMLOutputElement>("[data-value]");
+      if (!output) continue;
+
+      const start = Number(root.dataset.start ?? 0);
+      const step = Number(root.dataset.step ?? 1);
+      let value = start;
+
+      const render = () => {
+        output.textContent = String(value);
+        // 값이 바뀔 때 짧게 강조한다
+        output.animate(
+          [{ transform: "scale(1.25)" }, { transform: "scale(1)" }],
+          { duration: 180, easing: "ease-out" }
+        );
+      };
+
+      root
+        .querySelector("[data-inc]")
+        ?.addEventListener("click", () => ((value += step), render()));
+      root
+        .querySelector("[data-dec]")
+        ?.addEventListener("click", () => ((value -= step), render()));
+      root
+        .querySelector("[data-reset]")
+        ?.addEventListener("click", () => ((value = start), render()));
+    }
+  });
+</script>
+
+<style>
+  .counter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1.5em 0;
+    font-size: 0.95rem;
+  }
+
+  .counter-label {
+    color: rgb(from var(--foreground) r g b / 0.65);
+    margin-inline-end: 0.25rem;
+  }
+
+  .counter button {
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.7rem;
+    line-height: 1.6;
+    transition: border-color 0.2s ease;
+  }
+
+  .counter button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .counter output {
+    min-width: 3ch;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

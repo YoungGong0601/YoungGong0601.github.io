@@ -1,0 +1,241 @@
+@layer base {
+  /* ===== 본문 스타일 =====
+     Tailwind Typography(prose) 를 쓰지 않고 이전 사이트(Bear Blog 계열)의
+     규칙을 직접 적는다. 요소마다 값을 보고 고칠 수 있다. */
+  .app-prose {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply text-foreground font-bold;
+      margin: 1.6em 0 0.5rem;
+      line-height: 1.2;
+      /* 글자 단위로 끊지 않고 단어 단위로 넘긴다 */
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    /* 글 제목과 같은 크기 (text-5xl / sm:text-6xl) */
+    h1 {
+      font-size: 3rem;
+    }
+
+    @media (width >= 40rem) {
+      h1 {
+        font-size: 3.75rem;
+      }
+    }
+    h2 {
+      font-size: 2.6em;
+    }
+    h3 {
+      font-size: 2em;
+    }
+    h4 {
+      font-size: 1.6em;
+    }
+    h5 {
+      font-size: 1.3em;
+    }
+    h6 {
+      font-size: 1.1em;
+    }
+
+    p {
+      margin-bottom: 1.2em;
+    }
+
+    strong,
+    b {
+      font-weight: 700;
+    }
+
+    a {
+      @apply text-accent underline decoration-accent/50 underline-offset-4;
+    }
+
+    a:hover {
+      @apply decoration-accent;
+    }
+
+    ul,
+    ol {
+      margin: 0 0 1.2em;
+      padding-inline-start: 1.2em;
+      overflow-x: clip;
+    }
+
+    ul {
+      list-style: disc;
+    }
+
+    ol {
+      list-style: decimal;
+    }
+
+    li {
+      @apply marker:text-muted-foreground;
+      margin-bottom: 0.3em;
+      padding-inline-start: 0.2em;
+    }
+
+    li > ul,
+    li > ol {
+      margin: 0.35em 0 0;
+    }
+
+    /* 체크박스 목록은 불릿을 지운다 */
+    ul:has(> li > input[type="checkbox"]) {
+      list-style: none;
+      padding-inline-start: 0.2em;
+    }
+
+    blockquote {
+      @apply border-s-border text-muted-foreground;
+      border-inline-start-width: 2px;
+      padding-inline-start: 1.2em;
+      margin: 1.5em 0;
+    }
+
+    blockquote p:last-child {
+      margin-bottom: 0;
+    }
+
+    hr {
+      @apply border-border;
+      border: none;
+      border-top-width: 1px;
+      margin: 2.5em 0;
+    }
+
+    img {
+      @apply mx-auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    img[role="button"] {
+      @apply cursor-zoom-in;
+
+      &:focus-visible {
+        @apply outline-2 outline-offset-2;
+      }
+    }
+
+    figcaption {
+      @apply text-muted-foreground;
+      font-size: 0.9em;
+      text-align: center;
+    }
+
+    code {
+      @apply bg-muted text-foreground font-code;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      word-break: break-word;
+    }
+
+    pre {
+      padding: 0.85em 1em;
+      border-radius: 8px;
+      margin: 1.2em 0;
+      overflow-x: auto;
+    }
+
+    pre > code {
+      all: unset;
+      @apply font-code;
+    }
+
+    table {
+      width: 100%;
+      margin: 1.5em 0;
+      border-collapse: collapse;
+      font-size: 0.95em;
+    }
+
+    /* 세로줄 없이 가로줄만. 격자보다 눈이 덜 피곤하다 */
+    th,
+    td {
+      @apply border-border;
+      border: none;
+      border-bottom-width: 1px;
+      padding: 0.6em 0.9em;
+      text-align: start;
+      vertical-align: top;
+    }
+
+    thead th {
+      @apply text-muted-foreground;
+      border-bottom-width: 2px;
+      font-size: 0.9em;
+      font-weight: 600;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    th[align="center"],
+    td[align="center"] {
+      text-align: center;
+    }
+
+    th[align="right"],
+    td[align="right"] {
+      text-align: right;
+    }
+
+    th[align="left"],
+    td[align="left"] {
+      text-align: left;
+    }
+
+    details:not(.callout) {
+      @apply text-foreground;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 1.2em;
+    }
+
+    summary {
+      @apply focus-visible:outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1;
+    }
+  }
+
+  /* ===== Code Blocks & Syntax Highlighting ===== */
+  .astro-code {
+    @apply flex rounded-lg bg-(--shiki-light-bg) text-(--shiki-light) [&_span]:text-(--shiki-light);
+    font-size: 0.88em;
+    line-height: 1.45;
+  }
+
+  html[data-theme="dark"] .astro-code {
+    @apply bg-(--shiki-dark-bg) text-(--shiki-dark) [&_span]:text-(--shiki-dark);
+  }
+
+  /* Styles for Shiki transformers */
+  /* https://shiki.style/packages/transformers */
+  .astro-code {
+    .line.diff.add {
+      @apply relative inline-block w-full bg-green-400/20 before:absolute before:-left-3 before:text-green-500 before:content-['+'];
+    }
+    .line.diff.remove {
+      @apply relative inline-block w-full bg-red-500/20 before:absolute before:-left-3 before:text-red-500 before:content-['-'];
+    }
+    .line.highlighted {
+      @apply inline-block w-full bg-slate-400/20;
+    }
+    .highlighted-word {
+      @apply border-border rounded-sm border px-0.5 py-px;
+    }
+  }
+}

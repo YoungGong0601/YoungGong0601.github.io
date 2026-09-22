@@ -1,0 +1,132 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import IconPin from "@/assets/icons/IconPin.svg";
+import { getPostUrl } from "@/utils/getPostPaths";
+import { toTransitionName } from "@/utils/toTransitionName";
+import { defaultImage } from "@/utils/defaultImage";
+import { readingStats } from "@/utils/readingTime";
+import { slugifyStr } from "@/utils/slugify";
+import Datetime from "./Datetime.astro";
+import Tag from "./Tag.astro";
+
+type Props = {
+  variant?: "h2" | "h3";
+  /** true 면 Pinned 글을 이미지 위에 크게 띄우는 형태로 그린다 */
+  pinnedStyle?: boolean;
+  /** 썸네일을 숨긴다 (아카이브처럼 목록만 훑는 화면) */
+  hideImage?: boolean;
+  /** 같은 글이 한 페이지에 두 번 나올 때 전환 이름 충돌을 피하는 구분자.
+      view-transition-name 이 중복되면 브라우저가 전환을 아예 취소한다. */
+  scope?: string;
+} & CollectionEntry<"posts">;
+
+const {
+  variant: Heading = "h2",
+  id,
+  data,
+  body,
+  filePath,
+  pinnedStyle = false,
+  hideImage = false,
+  scope,
+} = Astro.props;
+
+const { title, description, heroImage, featured, tags, ...props } = data;
+
+const url = getPostUrl(id, filePath, Astro.currentLocale);
+
+// 썸네일이 없는 글은 생성해둔 기본 이미지를 쓴다
+const thumbnail = heroImage ?? defaultImage(id);
+
+const isPinned = featured === true;
+
+const { chars } = readingStats(body);
+
+const transitionName = scope
+  ? `${toTransitionName(id)}-${scope}`
+  : toTransitionName(id);
+
+// 목록 종류에 따라 Pinned 글만 이미지를 크게 쓴다
+const isWide = isPinned && pinnedStyle;
+---
+
+<li class="group my-8" data-tags={tags.join("|")}>
+  <div
+    class:list={[
+      hideImage
+        ? null
+        : isWide
+          ? "flex flex-col gap-3"
+          : "grid gap-4 sm:grid-cols-[1.5fr_3.5fr]",
+    ]}
+  >
+    {
+      !hideImage && (
+        <a
+          href={url}
+          class:list={["block", !isWide && "sm:col-start-1 sm:row-start-1"]}
+          tabindex="-1"
+          aria-hidden="true"
+        >
+      <Image
+        src={thumbnail}
+        alt=""
+        width={isWide ? 720 : 480}
+        height={isWide ? 360 : 320}
+        class:list={[
+          "w-full rounded-xl object-cover",
+          isWide ? "aspect-2/1" : "aspect-3/2",
+          "transition duration-500 ease-out",
+          "group-hover:-translate-y-1 group-hover:shadow-lg",
+        ]}
+          />
+        </a>
+      )
+    }
+
+    <div class:list={[!hideImage && !isWide && "sm:col-start-2 sm:row-start-1"]}>
+      <div class="card-head">
+      <div class="flex items-start justify-between gap-3">
+        <a
+          href={url}
+          class:list={[
+            "text-accent inline-block text-xl font-medium",
+            "underline-offset-4 hover:underline hover:decoration-accent",
+            "focus-visible:no-underline focus-visible:underline-offset-0",
+          ]}
+        >
+          <Heading transition:name={transitionName}>
+            {title}
+          </Heading>
+        </a>
+        {isPinned && (
+          <IconPin
+            class="text-muted-foreground mt-1 size-5 shrink-0"
+            aria-label="Pinned"
+          />
+        )}
+      </div>
+      <div class="card-meta flex flex-wrap items-center gap-x-3">
+        <Datetime {...props} />
+        <span class="text-muted-foreground text-sm">
+          {chars.toLocaleString()}자
+        </span>
+      </div>
+      </div>
+      {/* 설명 길이가 달라도 카드 높이가 흔들리지 않게 두 줄로 고정한다 */}
+      <p class="mt-3 line-clamp-2 min-h-[2lh]">{description}</p>
+
+      {
+        tags.length > 0 && (
+          <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+            {tags.slice(0, 3).map(tag => (
+              <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+  </div>
+</li>

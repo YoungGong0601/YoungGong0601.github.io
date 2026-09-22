@@ -1,0 +1,231 @@
+---
+// MDX 안에서 쓰는 꺾은선 그래프. SVG 를 직접 그리고, 선이 그려지는 애니메이션과
+// 점 호버 표시를 스크립트로 붙인다.
+type Props = {
+  data: number[];
+  labels?: string[];
+  caption?: string;
+  unit?: string;
+};
+
+const { data, labels = [], caption, unit = "" } = Astro.props;
+
+const W = 640;
+const H = 240;
+const PAD = { top: 16, right: 16, bottom: 28, left: 36 };
+
+const max = Math.max(...data);
+const min = Math.min(...data);
+const span = max - min || 1;
+
+const innerW = W - PAD.left - PAD.right;
+const innerH = H - PAD.top - PAD.bottom;
+
+const points = data.map((value, i) => ({
+  value,
+  label: labels[i] ?? String(i + 1),
+  x: PAD.left + (data.length === 1 ? innerW / 2 : (innerW * i) / (data.length - 1)),
+  y: PAD.top + innerH - ((value - min) / span) * innerH,
+}));
+
+const line = points.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+const area = `${PAD.left},${PAD.top + innerH} ${line} ${PAD.left + innerW},${PAD.top + innerH}`;
+
+// 가로 기준선 3개
+const rules = [0, 0.5, 1].map(t => ({
+  y: PAD.top + innerH * t,
+  value: (max - span * t).toFixed(0),
+}));
+---
+
+<figure class="chart" data-chart>
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={caption ?? "꺾은선 그래프"}>
+    {
+      rules.map(rule => (
+        <>
+          <line
+            class="chart-rule"
+            x1={PAD.left}
+            x2={W - PAD.right}
+            y1={rule.y}
+            y2={rule.y}
+          />
+          <text class="chart-tick" x={PAD.left - 8} y={rule.y + 4}>
+            {rule.value}
+          </text>
+        </>
+      ))
+    }
+
+    <polygon class="chart-area" points={area} />
+    <polyline class="chart-line" points={line} />
+
+    {
+      points.map(point => (
+        <g class="chart-point" tabindex="0">
+          <circle class="chart-dot" cx={point.x} cy={point.y} r="4" />
+          <circle
+            class="chart-hit"
+            cx={point.x}
+            cy={point.y}
+            r="14"
+            data-label={point.label}
+            data-value={`${point.value}${unit}`}
+          />
+        </g>
+      ))
+    }
+
+    {
+      points.map(point => (
+        <text class="chart-xlabel" x={point.x} y={H - 8}>
+          {point.label}
+        </text>
+      ))
+    }
+  </svg>
+
+  <div class="chart-foot">
+    <output data-readout>점에 마우스를 올리면 값이 나옵니다</output>
+    <button type="button" data-replay>다시 그리기</button>
+  </div>
+
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const charts =
+      document.querySelectorAll<HTMLElement>("[data-chart]:not([data-bound])");
+
+    for (const chart of charts) {
+      chart.dataset.bound = "true";
+
+      const readout = chart.querySelector<HTMLOutputElement>("[data-readout]");
+      const path = chart.querySelector<SVGPolylineElement>(".chart-line");
+
+      // 선이 그려지는 애니메이션. 길이를 재서 점선 길이로 쓴다.
+      const draw = () => {
+        if (!path) return;
+        const length = path.getTotalLength?.() ?? 0;
+        if (!length) return;
+        path.style.strokeDasharray = String(length);
+        path.animate(
+          [{ strokeDashoffset: length }, { strokeDashoffset: 0 }],
+          { duration: 900, easing: "ease-out", fill: "forwards" }
+        );
+      };
+
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        draw();
+      }
+      chart.querySelector("[data-replay]")?.addEventListener("click", draw);
+
+      for (const hit of chart.querySelectorAll<SVGCircleElement>(".chart-hit")) {
+        const show = () => {
+          if (!readout) return;
+          readout.textContent = `${hit.dataset.label} : ${hit.dataset.value}`;
+        };
+        hit.addEventListener("mouseenter", show);
+        hit.parentElement?.addEventListener("focus", show);
+      }
+    }
+  });
+</script>
+
+<style>
+  .chart {
+    margin: 1.8em 0;
+  }
+
+  .chart svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .chart-rule {
+    stroke: var(--border);
+    stroke-width: 1;
+  }
+
+  .chart-tick,
+  .chart-xlabel {
+    fill: rgb(from var(--foreground) r g b / 0.55);
+    font-size: 11px;
+  }
+
+  .chart-tick {
+    text-anchor: end;
+  }
+
+  .chart-xlabel {
+    text-anchor: middle;
+  }
+
+  .chart-area {
+    fill: rgb(from var(--accent) r g b / 0.14);
+  }
+
+  .chart-line {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .chart-dot {
+    fill: var(--background);
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    transition: r 0.15s ease;
+  }
+
+  .chart-hit {
+    fill: transparent;
+  }
+
+  .chart-point:hover .chart-dot,
+  .chart-point:focus-visible .chart-dot {
+    r: 6;
+  }
+
+  .chart-point:focus-visible {
+    outline: none;
+  }
+
+  .chart-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .chart-foot output {
+    color: rgb(from var(--foreground) r g b / 0.7);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chart-foot button {
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.15rem 0.7rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .chart-foot button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .chart figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: rgb(from var(--foreground) r g b / 0.6);
+    text-align: center;
+  }
+</style>

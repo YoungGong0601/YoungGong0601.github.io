@@ -1,0 +1,22 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import BrowseIndex from "@/components/BrowseIndex.astro";
+import config from "@/config";
+
+const title = "Series";
+---
+
+<Layout title={`${title} | ${config.site.title}`}>
+  <Header />
+  <Breadcrumb />
+
+  <Main pageTitle={title}>
+    <BrowseIndex />
+  </Main>
+
+  <Footer />
+</Layout>

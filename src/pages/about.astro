@@ -1,0 +1,72 @@
+---
+import { getEntry } from "astro:content";
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+const about = await getEntry("pages", "about");
+
+if (!about) {
+  throw new Error(
+    "Missing content entry: `about.md` or `about.mdx` in `src/content/pages/`"
+  );
+}
+
+const NOTION_URL =
+  "https://younggong0601.notion.site/_-3d895708e15a80648c7bf4d2957ce5f7";
+---
+
+<Layout
+  title={`${about.data.title} | ${config.site.title}`}
+  description={about.data.description}
+  ogImage={about.data.ogImage}
+  canonicalURL={about.data.canonicalURL}
+>
+  <Header />
+
+  <Breadcrumb />
+
+  {/* 이름을 h1 로 쓴다. 페이지 제목은 브레드크럼이 담당 */}
+  <Main pageTitle="홍령기">
+    <p class="text-muted-foreground -mt-6">
+      Unity Client Developer &amp; System Developer
+    </p>
+
+    <p class="border-s-accent mt-6 border-s-4 ps-4 text-lg leading-relaxed">
+      Minimal Design, Maximal Fun.<br />
+      확장성과 유연성을 설계하는 Unity 클라이언트 개발자
+    </p>
+
+    <dl class="border-border mt-8 flex gap-3 border-t pt-6">
+      <dt class="text-muted-foreground">메일</dt>
+      <dd>
+        <a class="text-accent" href="mailto:loveleter1@gmail.com"
+          >loveleter1@gmail.com</a
+        >
+      </dd>
+    </dl>
+
+    <a
+      class="border-border group mt-6 flex items-center justify-between gap-4 border p-6 no-underline transition duration-500 ease-out hover:-translate-y-1 hover:shadow-lg"
+      href={NOTION_URL}
+      target="_blank"
+      rel="noopener"
+    >
+      <span>
+        <span class="text-muted-foreground block text-sm">Portfolio</span>
+        <span class="text-accent mt-1 block text-xl font-semibold">
+          작업물 보러 가기
+        </span>
+      </span>
+      <IconArrowRight
+        class="text-accent size-6 transition-transform duration-500 ease-out group-hover:translate-x-1"
+      />
+    </a>
+  </Main>
+
+  <Footer />
+</Layout>

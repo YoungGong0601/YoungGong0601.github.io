@@ -1,0 +1,251 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Card from "@/components/Card.astro";
+import Tag from "@/components/Tag.astro";
+import IconLayoutCards from "@/assets/icons/IconLayoutCards.svg";
+import IconLayoutList from "@/assets/icons/IconLayoutList.svg";
+import Footer from "@/components/Footer.astro";
+import Pagination from "@/components/Pagination.astro";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { slugifyStr } from "@/utils/slugify";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+  // 순서는 항상 최신순. Pinned 글도 제 날짜 자리에 그대로 둔다.
+  return paginate(getSortedPosts(posts), { pageSize: config.posts.perPage });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+// 양 옆 레일에 쓸 시리즈와 태그
+const published = await getCollection("posts", ({ data }) => !data.draft);
+
+const seriesMap = new Map<string, number>();
+const tagCount = new Map<string, number>();
+for (const { data } of published) {
+  const name = data.series?.trim();
+  if (name) seriesMap.set(name, (seriesMap.get(name) ?? 0) + 1);
+  for (const tag of data.tags) {
+    tagCount.set(tag, (tagCount.get(tag) ?? 0) + 1);
+  }
+}
+
+const seriesList = [...seriesMap.entries()].sort(
+  (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
+);
+const tagList = [...tagCount.entries()].sort(
+  (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
+);
+
+// 본문(48rem) 바깥 여백에 레일을 둔다.
+const railStart = "max(1rem, calc(50vw - 24rem - 15.25rem))";
+---
+
+<Layout title={`${t.pages.postsTitle} | ${config.site.title}`}>
+  <Header />
+
+  <Breadcrumb />
+
+  {/* 좌측 레일: 시리즈 */}
+  {
+    seriesList.length > 0 && (
+      <aside
+        class="fixed top-32 bottom-10 hidden w-52 overflow-y-auto xl:block"
+        style={`inset-inline-start: ${railStart}`}
+        aria-label="Series"
+      >
+        <a
+          href={getRelativeLocaleUrl(locale, "series")}
+          class="text-muted-foreground hover:text-accent mb-3 block text-xs"
+        >
+          Series
+        </a>
+        <ul class="flex flex-col gap-2.5 text-sm">
+          {seriesList.map(([name, count]) => (
+            <li>
+              <a
+                href={getRelativeLocaleUrl(locale, `series/${slugifyStr(name)}`)}
+                class="hover:text-accent flex items-baseline justify-between gap-3 leading-snug"
+              >
+                <span class="font-medium">{name}</span>
+                <span class="text-muted-foreground text-xs">{count}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    )
+  }
+
+  {/* 우측 레일: 태그. 개수가 늘어나면 이 안에서만 스크롤된다 */}
+  {
+    tagList.length > 0 && (
+      <aside
+        class="fixed top-32 bottom-10 hidden w-52 overflow-y-auto overscroll-contain xl:block"
+        style={`inset-inline-end: ${railStart}`}
+        aria-label="Tags"
+      >
+        <p class="text-muted-foreground mb-3 text-xs">Tags</p>
+        <ul class="flex flex-col items-start gap-2.5 pb-6">
+          {tagList.map(([tag]) => (
+            <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" filter />
+          ))}
+        </ul>
+      </aside>
+    )
+  }
+
+  <Main pageTitle={t.pages.postsTitle} pageDesc={t.pages.postsDesc}>
+    <div
+      slot="actions"
+      class="flex items-center gap-1"
+      role="group"
+      aria-label="목록 보기 방식"
+    >
+      <button
+        type="button"
+        data-view-btn="cards"
+        aria-pressed="true"
+        title="이미지가 있는 목록"
+        aria-label="이미지가 있는 목록"
+        class="text-muted-foreground hover:text-accent aria-pressed:text-accent p-1.5"
+      >
+        <IconLayoutCards class="size-5" />
+      </button>
+      <button
+        type="button"
+        data-view-btn="compact"
+        aria-pressed="false"
+        title="좁은 목록"
+        aria-label="좁은 목록"
+        class="text-muted-foreground hover:text-accent aria-pressed:text-accent p-1.5"
+      >
+        <IconLayoutList class="size-5" />
+      </button>
+    </div>
+
+    <ul data-post-list data-view="cards">
+      {page.data.map(data => <Card {...data} />)}
+    </ul>
+  </Main>
+
+  <Pagination {page} />
+
+  <Footer noMarginTop={page.lastPage > 1} />
+</Layout>
+
+<script>
+  // 우측 레일에서 태그를 누르면 목록을 그 태그로 좁힌다.
+  // 같은 태그를 다시 누르면 해제된다. 한 번에 하나만 고른다.
+  document.addEventListener("astro:page-load", () => {
+    const items = [
+      ...document.querySelectorAll<HTMLElement>("#main-content li[data-tags]"),
+    ];
+    const buttons = [
+      ...document.querySelectorAll<HTMLButtonElement>("[data-filter-tag]"),
+    ];
+    if (items.length === 0 || buttons.length === 0) return;
+
+    const heading = document.querySelector("#main-content h1");
+
+    let active = "";
+
+    const update = () => {
+      // 제목을 "DEVLOG / 회고" 로 바꿔 무엇으로 좁혔는지 보여준다
+      if (heading) {
+        let label = heading.querySelector<HTMLElement>("[data-filter-label]");
+        if (!label) {
+          label = document.createElement("span");
+          label.dataset.filterLabel = "";
+          label.className = "text-muted-foreground font-normal";
+          heading.append(label);
+        }
+        label.textContent = active ? ` / ${active}` : "";
+      }
+
+      for (const item of items) {
+        const tags = (item.dataset.tags ?? "").split("|").filter(Boolean);
+        item.hidden = !(active === "" || tags.includes(active));
+      }
+
+      for (const button of buttons) {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.filterTag === active)
+        );
+      }
+    };
+
+    // 글로 이동할 때와 같은 화면 전환을 쓴다
+    const apply = () => {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+      if (!document.startViewTransition || reduced.matches) {
+        update();
+        return;
+      }
+      document.startViewTransition(update);
+    };
+
+    for (const button of buttons) {
+      button.addEventListener("click", () => {
+        const tag = button.dataset.filterTag ?? "";
+        active = active === tag ? "" : tag;
+        apply();
+      });
+    }
+  });
+
+  // 목록을 카드로 볼지 좁은 줄로 볼지. 고른 값은 기기에 남긴다.
+  const VIEW_KEY = "postListView";
+
+  document.addEventListener("astro:page-load", () => {
+    const list = document.querySelector<HTMLElement>("[data-post-list]");
+    if (!list) return;
+
+    const buttons = [
+      ...document.querySelectorAll<HTMLButtonElement>("[data-view-btn]"),
+    ];
+
+    const setView = (view: string) => {
+      list.dataset.view = view;
+      for (const button of buttons) {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.viewBtn === view)
+        );
+      }
+    };
+
+    try {
+      const saved = localStorage.getItem(VIEW_KEY);
+      if (saved === "compact") setView(saved);
+    } catch {}
+
+    for (const button of buttons) {
+      button.addEventListener("click", () => {
+        const view = button.dataset.viewBtn ?? "cards";
+        try {
+          localStorage.setItem(VIEW_KEY, view);
+        } catch {}
+
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+        if (!document.startViewTransition || reduced.matches) {
+          setView(view);
+          return;
+        }
+        document.startViewTransition(() => setView(view));
+      });
+    }
+  });
+</script>

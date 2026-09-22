@@ -1,7 +1,11 @@
 ---
 title: "test: 테스트 글 4"
-description: "목록·정렬·RSS 확인용 테스트 글 4 입니다."
-pubDate: 2026-09-19
+description: "목록과 정렬 확인용 테스트 글 4 입니다."
+pubDatetime: 2026-09-19
+tags:
+  - 회고
+  - 독서
+  - 에세이
 ---
 
 ## 테스트 글 4

@@ -1,0 +1,50 @@
+/* Register design tokens for Tailwind v4 */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-divider: var(--divider);
+  --font-app: var(--font-body);
+  --font-code: var(--font-ibm-plex-mono);
+}
+
+/* 강조색은 민트와 하늘색 사이의 시안 계열. */
+:root,
+[data-theme="light"] {
+  --background: #fafafa;
+  --foreground: #141414;
+  --accent: #23a8d1;
+  --accent-foreground: #ffffff;
+  --muted: #ececec;
+  --muted-foreground: #5f6663;
+  --border: #e2e2e2;
+  --divider: #111111;
+
+  /* 리퀴드 글래스 */
+  --glass-bg: rgb(255 255 255 / 0.62);
+  --glass-line: rgb(255 255 255 / 0.85);
+  --glass-shadow: 0 1px 8px rgb(24 48 120 / 0.08);
+
+}
+
+/* 다크는 순수 검정보다 한 단계 연한 회흑색 */
+[data-theme="dark"] {
+  --background: #1a1a1a;
+  --foreground: #ededed;
+  --accent: #7adcf5;
+  --accent-foreground: #04161e;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --border: #333333;
+  --divider: #333333;
+
+
+  --glass-bg: rgb(255 255 255 / 0.07);
+  --glass-line: rgb(255 255 255 / 0.14);
+  --glass-shadow: 0 1px 8px rgb(12 26 70 / 0.38);
+
+}
