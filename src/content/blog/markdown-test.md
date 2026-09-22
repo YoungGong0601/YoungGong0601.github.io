@@ -5,7 +5,6 @@ pubDatetime: 2026-09-21T14:30:00+09:00
 tags:
   - 테스트
   - 마크다운
-  - 기록
 featured: false
 ---
 

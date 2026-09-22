@@ -5,6 +5,7 @@ pubDatetime: 2026-09-22T20:00:11+09:00
 tags:
   - 기록
 draft: false
+featured: true
 ---
 자신의 학습 이력을 담기 위해, DEVLOG 공간을 마련했습니다!
 https://younggong0601.github.io/
