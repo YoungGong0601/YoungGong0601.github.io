@@ -2,46 +2,80 @@
 // 목록을 좁히는 버튼 묶음. 태그와 시리즈가 같은 동작을 쓰되 모양만 다르다.
 // 좁은 화면에서는 같은 목록이 본문 위에도 한 벌 더 그려지므로,
 // 스크립트는 data-filter-* 를 가진 버튼을 전부 찾아서 상태를 맞춘다.
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Tag from "./Tag.astro";
 import type { Taxon } from "@/utils/taxonomy";
+import config from "@/config";
 
 type Props = {
   kind: "tag" | "series";
   items: Taxon[];
-  active?: string;
+  /** 그 자리에서 좁히는 버튼 대신, 좁혀진 주소로 가는 링크로 그린다 */
+  mode?: "filter" | "link";
+  /** 가로로 늘어놓고 넘치면 줄을 바꾼다 (좁은 화면의 필터 바) */
+  inline?: boolean;
 };
 
-const { kind, items, active } = Astro.props;
+const { kind, items, mode = "filter", inline = false } = Astro.props;
+
+const postsUrl = getRelativeLocaleUrl(
+  Astro.currentLocale ?? config.site.lang,
+  "posts"
+);
 ---
 
 {
   kind === "tag" ? (
-    <ul class="flex flex-wrap items-start gap-x-4 gap-y-2.5">
+    <ul
+      class:list={[
+        "flex flex-wrap gap-x-4 gap-y-2.5",
+        inline ? "items-center" : "items-start",
+      ]}
+    >
       {items.map(item => (
-        <Tag
-          tag={item.slug}
-          tagName={item.name}
-          size="sm"
-          filter
-          pressed={item.name === active}
-        />
+        <Tag tagName={item.name} size="sm" filter={mode === "filter"} />
       ))}
     </ul>
   ) : (
-    <ul class="flex flex-col gap-2.5 text-sm">
-      {items.map(item => (
-        <li>
-          <button
-            type="button"
-            data-filter-series={item.name}
-            aria-pressed={item.name === active}
-            class="hover:text-accent aria-pressed:text-accent aria-pressed:font-semibold flex w-full items-baseline justify-between gap-3 text-start leading-snug"
-          >
+    <ul
+      class:list={[
+        "flex text-sm",
+        inline ? "flex-wrap items-center gap-x-4 gap-y-2" : "flex-col gap-2.5",
+      ]}
+    >
+      {items.map(item => {
+        const shape = [
+          "hover:text-accent aria-pressed:text-accent aria-pressed:font-semibold flex items-baseline gap-2 text-start leading-snug whitespace-nowrap",
+          !inline && "w-full justify-between gap-3",
+        ];
+        const label = (
+          <Fragment>
             <span class="font-medium">{item.name}</span>
             <span class="text-muted-foreground text-xs">{item.count}</span>
-          </button>
-        </li>
-      ))}
+          </Fragment>
+        );
+        return (
+          <li>
+            {mode === "filter" ? (
+              <button
+                type="button"
+                data-filter-series={item.name}
+                aria-pressed={false}
+                class:list={shape}
+              >
+                {label}
+              </button>
+            ) : (
+              <a
+                href={`${postsUrl}?series=${encodeURIComponent(item.name)}`}
+                class:list={shape}
+              >
+                {label}
+              </a>
+            )}
+          </li>
+        );
+      })}
     </ul>
   )
 }

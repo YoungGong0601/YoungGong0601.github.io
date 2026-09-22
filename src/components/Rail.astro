@@ -1,6 +1,6 @@
 ---
-// 본문(48rem) 바깥 여백에 붙는 고정 레일. 창이 좁으면(xl 미만) 사라진다.
-// 홈과 DEVLOG 가 같은 위치를 쓰도록 여기서만 값을 정한다.
+// 본문 옆에 붙는 고정 레일. 홈과 DEVLOG 가 같은 위치를 쓴다.
+// 공간은 본문, 좌측 레일, 우측 레일 순으로 나눠 갖는다 (규칙은 global.css).
 type Props = {
   side: "start" | "end";
   label: string;
@@ -16,7 +16,10 @@ const position =
 ---
 
 <aside
-  class="fixed top-32 bottom-10 hidden w-52 overflow-y-auto overscroll-contain xl:block"
+  class:list={[
+    "rail fixed top-32 bottom-10 w-52 overflow-hidden overscroll-contain",
+    side === "start" ? "rail-start" : "rail-end",
+  ]}
   style={position}
   aria-label={label}
 >

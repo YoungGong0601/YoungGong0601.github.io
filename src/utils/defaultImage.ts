@@ -8,6 +8,14 @@ import default5 from "@/assets/images/defaults/default-5.jpg";
 import default6 from "@/assets/images/defaults/default-6.jpg";
 import default7 from "@/assets/images/defaults/default-7.jpg";
 import default8 from "@/assets/images/defaults/default-8.jpg";
+import default9 from "@/assets/images/defaults/default-9.jpg";
+import default10 from "@/assets/images/defaults/default-10.jpg";
+import default11 from "@/assets/images/defaults/default-11.jpg";
+import default12 from "@/assets/images/defaults/default-12.jpg";
+import default13 from "@/assets/images/defaults/default-13.jpg";
+import default14 from "@/assets/images/defaults/default-14.jpg";
+import default15 from "@/assets/images/defaults/default-15.jpg";
+import default16 from "@/assets/images/defaults/default-16.jpg";
 
 const DEFAULTS: ImageMetadata[] = [
   default1,
@@ -18,6 +26,14 @@ const DEFAULTS: ImageMetadata[] = [
   default6,
   default7,
   default8,
+  default9,
+  default10,
+  default11,
+  default12,
+  default13,
+  default14,
+  default15,
+  default16,
 ];
 
 /**

@@ -162,11 +162,13 @@
       font-size: 0.95em;
     }
 
-    /* 세로줄 없이 가로줄만. 격자보다 눈이 덜 피곤하다 */
+    /* 세로줄 없이 가로줄만. 격자보다 눈이 덜 피곤하다.
+       border: none 으로 지우면 선 모양까지 사라져 폭을 줘도 그려지지 않는다.
+       모양은 solid 로 두고 폭만 0 에서 시작한다. */
     th,
     td {
+      border: 0 solid;
       @apply border-border;
-      border: none;
       border-bottom-width: 1px;
       padding: 0.6em 0.9em;
       text-align: start;
@@ -238,4 +240,22 @@
       @apply border-border rounded-sm border px-0.5 py-px;
     }
   }
+}
+
+/* 옵시디언에서 넣은 영상 (remarkEmbed 가 만든다) */
+.embed-video {
+  position: relative;
+  margin-block: 1.5rem;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: var(--muted);
+}
+
+.embed-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }

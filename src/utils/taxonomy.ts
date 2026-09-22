@@ -1,12 +1,9 @@
 import type { CollectionEntry } from "astro:content";
 import { postFilter } from "./postFilter";
-import { slugifyStr } from "./slugify";
 
 export type Taxon = {
-  /** 화면에 그대로 쓰는 이름 */
+  /** 화면에 그대로 쓰고, 주소의 ?tag= / ?series= 에도 그대로 실린다 */
   name: string;
-  /** 주소에 쓰는 슬러그 */
-  slug: string;
   /** 이 이름이 붙은 글 수 */
   count: number;
 };
@@ -19,7 +16,7 @@ function tally(names: string[]): Taxon[] {
   }
 
   return [...counts.entries()]
-    .map(([name, count]) => ({ name, slug: slugifyStr(name), count }))
+    .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }
 

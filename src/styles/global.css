@@ -68,11 +68,92 @@
   @apply max-w-app mx-auto w-full px-4;
 }
 
+/* 안에서 따로 스크롤하는 칸. 네이티브 스크롤바는 전역으로 숨겨 두었으므로
+   페이지 스크롤바와 같은 모양의 막대를 붙인다 (overlay-ui.ts 가 그린다). */
+@utility scroll-box {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.inner-scrollbar {
+  position: absolute;
+  right: 0;
+  width: 6px;
+  border-radius: 3px;
+  background: rgb(from var(--foreground) r g b / 0.35);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+/* 아래에 더 있다는 표시. 목록 맨 아래 가운데에 점 셋을 찍는다.
+   글자가 아니라 그려낸 점이라 폰트에 따라 모양이 흔들리지 않는다.
+   끝까지 내리면 사라진다. */
+.scroll-hint {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 18px;
+  height: 6px;
+  translate: -50% 0;
+  color: var(--muted-foreground);
+  background-image: radial-gradient(
+    circle,
+    currentColor 1.5px,
+    transparent 1.6px
+  );
+  background-size: 6px 6px;
+  background-repeat: repeat-x;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
 /* 현재 메뉴 표시 — 물결 밑줄 대신 단색 바 */
 @utility active-nav {
   @apply text-accent relative;
   &::after {
-    @apply bg-accent absolute inset-x-1 -bottom-1 h-0.5 rounded-full content-[''];
+    /* 아래 호버 밑줄(펜 선)과 같은 높이에 오도록 맞춘 값 */
+    @apply bg-accent absolute inset-x-1 bottom-[0.1rem] h-0.5 rounded-full content-[''];
+  }
+}
+
+/* 메뉴에 마우스를 올리면 손으로 그은 듯한 밑줄이 나온다.
+   선 모양은 SVG 로 파두고 마스크로 찍어, 색은 글자색을 그대로 따른다. */
+#menu-items > li > a {
+  position: relative;
+}
+
+#menu-items > li > a:not(.active-nav):hover::after,
+#menu-items > li > a:not(.active-nav):focus-visible::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0.15rem;
+  bottom: -0.1rem;
+  height: 9px;
+  background: currentColor;
+  opacity: 0.8;
+  --pen: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 11' preserveAspectRatio='none'%3E%3Cpath d='M2,7.6 C14,1.8 27,9.6 41,4.4 C55,-0.4 68,9 82,3.8 C89,1.4 94,7 98,3.4' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  -webkit-mask-image: var(--pen);
+  mask-image: var(--pen);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* 글을 읽는 동안 아래로 내려가면 헤더가 접힌다 (overlay-ui.ts 가 켜고 끈다) */
+header {
+  transition: translate 0.25s ease;
+}
+
+header[data-hidden="true"] {
+  translate: 0 -100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header {
+    transition: none;
   }
 }
 
@@ -136,46 +217,6 @@
   opacity: 1;
 }
 
-/* 좁은 창에서 한 번만 뜨는 안내 */
-#wide-hint {
-  position: fixed;
-  bottom: 1.5rem;
-  left: 50%;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  max-width: calc(100vw - 2rem);
-  padding: 0.7rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: 0.75rem;
-  background: var(--background);
-  box-shadow: var(--shadow-lg);
-  font-size: 0.9rem;
-  opacity: 0;
-  translate: -50% 0.75rem;
-  transition:
-    opacity 0.25s ease,
-    translate 0.25s ease;
-  z-index: 70;
-}
-
-#wide-hint[data-visible="true"] {
-  opacity: 1;
-  translate: -50% 0;
-}
-
-#wide-hint button {
-  color: var(--accent);
-  white-space: nowrap;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #wide-hint {
-    transition: opacity 0.25s ease;
-    translate: -50% 0;
-  }
-}
-
 /* 유리 커서 — 푸터 토글로 켠다. 기본 포인터는 그때만 숨긴다. */
 html[data-cursor="glass"],
 html[data-cursor="glass"] * {
@@ -187,31 +228,32 @@ html[data-cursor="glass"] textarea {
   cursor: auto;
 }
 
+/* 위치는 transform 하나로만 옮긴다. 여기에 전환을 걸면 포인터를 따라가지
+   못하고 계속 뒤처지므로, 전환은 크기와 투명도에만 준다. */
 #cursor-glass {
-  --size: 2.2rem;
+  --size: 1.25rem;
   position: fixed;
   top: 0;
   left: 0;
   width: var(--size);
   height: var(--size);
-  border-radius: 9999px;
+  margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+  border-radius: 50%;
   pointer-events: none;
   z-index: 80;
   opacity: 0;
-  translate: calc(var(--x, 50vw) - 50%) calc(var(--y, 50vh) - 50%);
-  /* 색을 덮지 않고 뒤를 굴절시킨다. 테두리 하이라이트가 유리의 두께 역할 */
-  background: transparent;
-  border: 1px solid rgb(255 255 255 / 0.3);
-  backdrop-filter: blur(3px) saturate(1.9) brightness(1.08);
-  box-shadow:
-    inset 2px 3px 6px -2px rgb(255 255 255 / 0.85),
-    inset -2px -3px 6px -2px rgb(255 255 255 / 0.4),
-    0 6px 16px rgb(24 48 120 / 0.22);
+  will-change: transform;
+
+  /* 반투명 흰색 위에 블러만. 색을 건드리는 필터는 쓰지 않는다.
+     테두리는 흰색으로 두면 밝은 배경에서 보이지 않아 전경색을 쓴다. */
+  background: rgb(255 255 255 / 0.15);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgb(from var(--foreground) r g b / 0.55);
   transition:
-    translate 0.09s ease-out,
-    width 0.18s ease,
-    height 0.18s ease,
-    opacity 0.18s ease;
+    width 0.15s ease,
+    height 0.15s ease,
+    margin 0.15s ease,
+    opacity 0.15s ease;
 }
 
 #cursor-glass[data-visible="true"] {
@@ -220,7 +262,16 @@ html[data-cursor="glass"] textarea {
 
 /* 누를 수 있는 것 위에서는 커진다 */
 #cursor-glass[data-over="target"] {
-  --size: 3.2rem;
+  --size: 1.875rem;
+}
+
+/* 누르는 동안 움츠러든다 */
+#cursor-glass[data-pressed="true"] {
+  --size: 0.9rem;
+}
+
+#cursor-glass[data-over="target"][data-pressed="true"] {
+  --size: 1.4rem;
 }
 
 /* 터치 기기에는 포인터가 없다 */
@@ -231,9 +282,40 @@ html[data-cursor="glass"] textarea {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #cursor-glass {
-    transition: opacity 0.18s ease;
+/* ── 레일과 본문의 자리 나눔 ──────────────
+   공간은 본문 → 좌측 레일 → 우측 레일 순으로 우선한다.
+   본문 48rem 이 먼저 자리를 잡고, 남으면 좌측이, 더 남으면 우측이 나온다. */
+.rail {
+  display: none;
+}
+
+/* 본문(48rem + 좌우 여백)과 레일(13rem)이 세로 스크롤바까지 두고 들어가는 폭.
+   경계를 딱 맞추면 스크롤바 때문에 가로 스크롤이 생긴다. */
+@media (min-width: 68rem) {
+  .rail-start {
+    display: block;
+  }
+
+  /* 아직 본문을 가운데 둘 여유는 없다. 레일 옆으로 민다.
+     레일이 있는 페이지인지는 마크업이 이미 말해주므로 따로 표시하지 않는다. */
+  body:has(.rail-start) .app-layout:not(header *) {
+    margin-inline-start: 16rem;
+  }
+
+  /* 레일에 있는 것을 본문 위에 또 보일 필요가 없다 */
+  .rail-alt {
+    display: none;
+  }
+}
+
+/* 양쪽 레일이 모두 들어가는 폭. 본문은 다시 가운데로 */
+@media (min-width: 84rem) {
+  .rail-end {
+    display: block;
+  }
+
+  body:has(.rail-start) .app-layout:not(header *) {
+    margin-inline-start: auto;
   }
 }
 
@@ -268,6 +350,52 @@ html[data-cursor="glass"] textarea {
   -webkit-line-clamp: 1;
 }
 
+/* 태그는 좁은 목록에서도 남긴다. 간격만 줄인다. */
 [data-view="compact"] li ul {
-  display: none;
+  margin-top: 0.25rem;
+}
+
+/* ── 콜아웃 ──────────────
+   rehype-callouts 의 옵시디언 테마는 종류별 색만 빌려 쓰고, 모양은 이 사이트
+   결에 맞춘다. 파스텔 블록 대신 왼쪽 굵은 선 + 아주 옅은 바탕이라 인용문과
+   같은 리듬으로 읽힌다. */
+#article .callout {
+  --rc: var(--rc-color-light);
+  border: 0 solid var(--rc);
+  border-inline-start-width: 3px;
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: rgb(from var(--rc) r g b / 0.07);
+  margin: 1.5em 0;
+  padding: 0.85em 1.15em;
+}
+
+[data-theme="dark"] #article .callout {
+  --rc: var(--rc-color-dark);
+  background: rgb(from var(--rc) r g b / 0.12);
+}
+
+#article .callout-title {
+  align-items: center;
+  gap: 0.45em;
+  color: var(--rc);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+#article .callout-title-icon svg {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+/* 접히는 콜아웃의 화살표도 같은 색으로 */
+#article .callout-fold-icon svg {
+  color: var(--rc);
+}
+
+#article .callout-content > :first-child {
+  margin-top: 0.4em;
+}
+
+#article .callout-content > :last-child {
+  margin-bottom: 0;
 }

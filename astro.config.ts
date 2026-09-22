@@ -17,6 +17,7 @@ import {
   transformerNotationWordHighlight,
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
+import { remarkObsidian } from "./src/utils/remarkObsidian";
 import config from "./astro-paper.config";
 
 export default defineConfig({
@@ -28,11 +29,6 @@ export default defineConfig({
         config.features?.showArchives !== false || !page.endsWith("/archives/"),
     }),
   ],
-  // 목록 화면은 /posts 하나뿐이다. 묶음 주소는 그리로 보낸다.
-  redirects: {
-    "/tags": "/posts",
-    "/series": "/posts",
-  },
   i18n: {
     locales: ["ko"],
     defaultLocale: "ko",
@@ -45,6 +41,7 @@ export default defineConfig({
       remarkPlugins: [
         remarkToc,
         [remarkCollapse, { test: "Table of contents" }],
+        remarkObsidian,
       ],
       rehypePlugins: [rehypeCallouts],
     }),

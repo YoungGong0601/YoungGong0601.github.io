@@ -4,8 +4,6 @@ export default {
   nav: {
     home: "Home",
     posts: "Posts",
-    tags: "Tags",
-    series: "Series",
     about: "About",
     archives: "Archives",
     search: "Search",
@@ -26,7 +24,6 @@ export default {
   pagination: {
     prev: "Prev",
     next: "Next",
-    page: "Page",
   },
   home: {
     socialLinks: "Social Links",
@@ -52,7 +49,6 @@ export default {
     archivesDesc: "All the articles I've archived.",
 
     searchTitle: "Search",
-    searchDesc: "Search any article ...",
   },
   a11y: {
     skipToContent: "Skip to content",

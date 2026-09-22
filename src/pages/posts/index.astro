@@ -12,7 +12,7 @@ const posts = await getCollection("posts", ({ data }) => !data.draft);
 const t = useTranslations(Astro.currentLocale ?? config.site.lang);
 ---
 
-<Layout title={`${t.pages.postsTitle} | ${config.site.title}`}>
+<Layout kind="list" title={`${t.pages.postsTitle} | ${config.site.title}`}>
   <Header />
   <Breadcrumb />
 

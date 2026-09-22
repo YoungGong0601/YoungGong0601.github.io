@@ -12,6 +12,11 @@ type Props = {
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
+  /**
+   * 이 페이지가 어떤 화면인지. overlay-ui.ts 가 이 값으로 스크롤 기억과
+   * 헤더 접힘을 판단한다. 경로를 보고 추측하지 않게 하려는 것이다.
+   */
+  kind?: "list" | "post";
 };
 
 const { site } = config;
@@ -21,6 +26,7 @@ const {
   description = site.description,
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+  kind,
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
@@ -117,6 +123,7 @@ const rssHref = getRelativeLocaleUrl(
     <ClientRouter />
   </head>
   <body
+    data-page={kind}
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
     <slot />

@@ -4,8 +4,6 @@ export default {
   nav: {
     home: "Home",
     posts: "DEVLOG",
-    tags: "Tags",
-    series: "Series",
     about: "About",
     archives: "Archives",
     search: "Search",
@@ -26,7 +24,6 @@ export default {
   pagination: {
     prev: "이전",
     next: "다음",
-    page: "Page",
   },
   home: {
     socialLinks: "링크",
@@ -52,7 +49,6 @@ export default {
     archivesDesc: "연도와 월별로 모아본 글.",
 
     searchTitle: "검색",
-    searchDesc: "글 내용으로 찾기",
   },
   a11y: {
     skipToContent: "본문으로 건너뛰기",

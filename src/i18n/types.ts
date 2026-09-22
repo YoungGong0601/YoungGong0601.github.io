@@ -2,8 +2,6 @@ export interface UIStrings {
   nav: {
     home: string;
     posts: string;
-    tags: string;
-    series: string;
     about: string;
     archives: string;
     search: string;
@@ -24,7 +22,6 @@ export interface UIStrings {
   pagination: {
     prev: string;
     next: string;
-    page: string;
   };
   home: {
     socialLinks: string;
@@ -50,7 +47,6 @@ export interface UIStrings {
     archivesDesc: string;
 
     searchTitle: string;
-    searchDesc: string;
   };
   a11y: {
     skipToContent: string;
