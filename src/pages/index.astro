@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { Image } from "astro:assets";
-import { defaultImage } from "@/utils/defaultImage";
 import heroSample from "@/assets/images/home-hero.jpg";
 import character from "@/assets/images/character.png";
 import Layout from "@/layouts/Layout.astro";
@@ -11,9 +10,10 @@ import Footer from "@/components/Footer.astro";
 import Socials from "@/components/Socials.astro";
 import Card from "@/components/Card.astro";
 import Tag from "@/components/Tag.astro";
-import { getPostUrl } from "@/utils/getPostPaths";
+import Rail from "@/components/Rail.astro";
+import PostList from "@/components/PostList.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
-import { slugifyStr } from "@/utils/slugify";
+import { getTags, getSeries } from "@/utils/taxonomy";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
@@ -30,24 +30,8 @@ const homePath = getRelativeLocaleUrl(locale, "");
 // 아래 값들은 모두 실제 글에서 계산한다.
 const published = posts.filter(({ data }) => !data.draft);
 
-const tagCount = new Map<string, number>();
-for (const { data } of published) {
-  for (const tag of data.tags) {
-    tagCount.set(tag, (tagCount.get(tag) ?? 0) + 1);
-  }
-}
-const allTags = [...tagCount.entries()].sort(
-  (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
-);
-
-const seriesMap = new Map<string, number>();
-for (const { data } of published) {
-  const name = data.series?.trim();
-  if (name) seriesMap.set(name, (seriesMap.get(name) ?? 0) + 1);
-}
-const seriesList = [...seriesMap.entries()].sort(
-  (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
-);
+const allTags = getTags(posts);
+const seriesList = getSeries(posts);
 
 // 좌측 버튼. href 가 없으면 자리만 잡아둔 버튼이다.
 const shortcuts = [
@@ -65,35 +49,26 @@ const lastUpdatedText = lastUpdated
   ? `${lastUpdated.getFullYear()}.${String(lastUpdated.getMonth() + 1).padStart(2, "0")}.${String(lastUpdated.getDate()).padStart(2, "0")}`
   : "";
 
-// 양 옆 레일은 본문(48rem) 바깥 여백에 놓는다.
-const railStart = "max(1rem, calc(50vw - 24rem - 15.25rem))";
 ---
 
 <Layout>
   <Header />
 
   {/* 좌측 레일: 시리즈와 글 목록 */}
-  <aside
-    class="fixed top-32 bottom-10 hidden w-52 overflow-y-auto xl:block"
-    style={`inset-inline-start: ${railStart}`}
-    aria-label="Series, DEVLOG"
-  >
+  <Rail side="start" label="Series, DEVLOG">
     {
       seriesList.length > 0 && (
         <section class="mb-8">
           <p class="text-muted-foreground mb-3 text-xs">Series</p>
           <ul class="flex flex-col gap-2.5 text-sm">
-            {seriesList.map(([name, count]) => (
+            {seriesList.map(item => (
               <li>
                 <a
-                  href={getRelativeLocaleUrl(
-                    locale,
-                    `series/${slugifyStr(name)}`
-                  )}
+                  href={getRelativeLocaleUrl(locale, `series/${item.slug}`)}
                   class="hover:text-accent flex items-baseline justify-between gap-3 leading-snug"
                 >
-                  <span class="font-medium">{name}</span>
-                  <span class="text-muted-foreground text-xs">{count}</span>
+                  <span class="font-medium">{item.name}</span>
+                  <span class="text-muted-foreground text-xs">{item.count}</span>
                 </a>
               </li>
             ))}
@@ -104,39 +79,12 @@ const railStart = "max(1rem, calc(50vw - 24rem - 15.25rem))";
 
     <section>
       <p class="text-muted-foreground mb-3 text-xs">DEVLOG</p>
-      <ul class="flex flex-col gap-3">
-        {
-          sortedPosts.map(entry => (
-            <li>
-              <a
-                href={getPostUrl(entry.id, entry.filePath, Astro.currentLocale)}
-                class="text-muted-foreground hover:text-accent grid grid-cols-[2.5rem_1fr] items-center gap-2.5 text-sm leading-snug"
-              >
-                <Image
-                  src={entry.data.heroImage ?? defaultImage(entry.id)}
-                  alt=""
-                  width={64}
-                  height={64}
-                  quality={45}
-                  loading="lazy"
-                  decoding="async"
-                  class="aspect-square w-full rounded-md object-cover"
-                />
-                <span>{entry.data.title}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      <PostList posts={sortedPosts} />
     </section>
-  </aside>
+  </Rail>
 
   {/* 우측 레일: 버튼과 전체 태그 */}
-  <aside
-    class="fixed top-32 bottom-10 hidden w-52 overflow-y-auto xl:block"
-    style={`inset-inline-end: ${railStart}`}
-    aria-label="바로가기와 태그"
-  >
+  <Rail side="end" label="바로가기와 태그">
     <ul class="flex flex-col gap-2">
       {
         shortcuts.map(item =>
@@ -167,14 +115,14 @@ const railStart = "max(1rem, calc(50vw - 24rem - 15.25rem))";
         <section class="mt-8">
           <p class="text-muted-foreground mb-3 text-xs">Tags</p>
           <ul class="flex flex-wrap items-start gap-x-4 gap-y-2.5">
-            {allTags.map(([tag]) => (
-              <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />
+            {allTags.map(item => (
+              <Tag tag={item.slug} tagName={item.name} size="sm" />
             ))}
           </ul>
         </section>
       )
     }
-  </aside>
+  </Rail>
 
   <main
     id="main-content"
@@ -223,7 +171,7 @@ const railStart = "max(1rem, calc(50vw - 24rem - 15.25rem))";
         </div>
         <div class="flex gap-2">
           <dt>태그</dt>
-          <dd class="text-foreground font-semibold">{tagCount.size}개</dd>
+          <dd class="text-foreground font-semibold">{allTags.length}개</dd>
         </div>
         {
           lastUpdatedText && (

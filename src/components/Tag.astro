@@ -9,9 +9,17 @@ type Props = {
   size?: "sm" | "lg";
   /** true 면 링크 대신 필터 버튼으로 그린다. 모양은 그대로 둔다. */
   filter?: boolean;
+  /** 필터 버튼이 처음부터 눌린 상태인지 */
+  pressed?: boolean;
 };
 
-const { tag, tagName, size = "lg", filter = false } = Astro.props;
+const {
+  tag,
+  tagName,
+  size = "lg",
+  filter = false,
+  pressed = false,
+} = Astro.props;
 
 const locale = Astro.currentLocale ?? config.site.lang;
 
@@ -34,7 +42,7 @@ const icon = ["opacity-80", size === "sm" ? "size-4" : "size-5"];
       <button
         type="button"
         data-filter-tag={tagName}
-        aria-pressed="false"
+        aria-pressed={pressed}
         class:list={shape}
       >
         <IconHash class:list={icon} />

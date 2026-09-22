@@ -1,0 +1,47 @@
+---
+// 목록을 좁히는 버튼 묶음. 태그와 시리즈가 같은 동작을 쓰되 모양만 다르다.
+// 좁은 화면에서는 같은 목록이 본문 위에도 한 벌 더 그려지므로,
+// 스크립트는 data-filter-* 를 가진 버튼을 전부 찾아서 상태를 맞춘다.
+import Tag from "./Tag.astro";
+import type { Taxon } from "@/utils/taxonomy";
+
+type Props = {
+  kind: "tag" | "series";
+  items: Taxon[];
+  active?: string;
+};
+
+const { kind, items, active } = Astro.props;
+---
+
+{
+  kind === "tag" ? (
+    <ul class="flex flex-wrap items-start gap-x-4 gap-y-2.5">
+      {items.map(item => (
+        <Tag
+          tag={item.slug}
+          tagName={item.name}
+          size="sm"
+          filter
+          pressed={item.name === active}
+        />
+      ))}
+    </ul>
+  ) : (
+    <ul class="flex flex-col gap-2.5 text-sm">
+      {items.map(item => (
+        <li>
+          <button
+            type="button"
+            data-filter-series={item.name}
+            aria-pressed={item.name === active}
+            class="hover:text-accent aria-pressed:text-accent aria-pressed:font-semibold flex w-full items-baseline justify-between gap-3 text-start leading-snug"
+          >
+            <span class="font-medium">{item.name}</span>
+            <span class="text-muted-foreground text-xs">{item.count}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  )
+}

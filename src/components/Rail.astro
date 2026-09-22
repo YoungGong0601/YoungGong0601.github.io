@@ -1,0 +1,24 @@
+---
+// 본문(48rem) 바깥 여백에 붙는 고정 레일. 창이 좁으면(xl 미만) 사라진다.
+// 홈과 DEVLOG 가 같은 위치를 쓰도록 여기서만 값을 정한다.
+type Props = {
+  side: "start" | "end";
+  label: string;
+};
+
+const { side, label } = Astro.props;
+
+const railStart = "max(1rem, calc(50vw - 24rem - 15.25rem))";
+const position =
+  side === "start"
+    ? `inset-inline-start: ${railStart}`
+    : `inset-inline-end: ${railStart}`;
+---
+
+<aside
+  class="fixed top-32 bottom-10 hidden w-52 overflow-y-auto overscroll-contain xl:block"
+  style={position}
+  aria-label={label}
+>
+  <slot />
+</aside>

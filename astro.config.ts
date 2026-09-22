@@ -28,9 +28,10 @@ export default defineConfig({
         config.features?.showArchives !== false || !page.endsWith("/archives/"),
     }),
   ],
-  // /tags 는 /series 와 같은 화면이라 정본 하나만 둔다.
+  // 목록 화면은 /posts 하나뿐이다. 묶음 주소는 그리로 보낸다.
   redirects: {
-    "/tags": "/series",
+    "/tags": "/posts",
+    "/series": "/posts",
   },
   i18n: {
     locales: ["ko"],

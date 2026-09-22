@@ -1,0 +1,54 @@
+---
+// 레일에 들어가는 글 목록. 작은 썸네일과 제목만 한 줄씩.
+// 홈과 글 페이지가 같은 모양을 쓴다.
+import type { CollectionEntry } from "astro:content";
+import type { HTMLAttributes } from "astro/types";
+import { Image } from "astro:assets";
+import { getPostUrl } from "@/utils/getPostPaths";
+import { defaultImage } from "@/utils/defaultImage";
+
+type Props = {
+  posts: CollectionEntry<"posts">[];
+  /** 지금 읽고 있는 글. 그 줄만 강조한다. */
+  currentId?: string;
+  /** 시리즈 이름. 그 시리즈의 글에 표시를 남겨 걸러낼 수 있게 한다. */
+  seriesName?: string;
+} & HTMLAttributes<"ul">;
+
+const { posts, currentId, seriesName, ...attrs } = Astro.props;
+---
+
+<ul class="flex flex-col gap-3" {...attrs}>
+  {
+    posts.map(entry => (
+      <li
+        data-current={entry.id === currentId ? "true" : null}
+        data-in-series={
+          seriesName && entry.data.series?.trim() === seriesName ? "true" : null
+        }
+      >
+        <a
+          href={getPostUrl(entry.id, entry.filePath, Astro.currentLocale)}
+          class:list={[
+            "grid grid-cols-[2.5rem_1fr] items-center gap-2.5 text-sm leading-snug",
+            entry.id === currentId
+              ? "text-accent font-semibold"
+              : "text-muted-foreground hover:text-accent",
+          ]}
+        >
+          <Image
+            src={entry.data.heroImage ?? defaultImage(entry.id)}
+            alt=""
+            width={64}
+            height={64}
+            quality={45}
+            loading="lazy"
+            decoding="async"
+            class="aspect-square w-full rounded-md object-cover"
+          />
+          <span>{entry.data.title}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>

@@ -14,8 +14,6 @@ type Props = {
   variant?: "h2" | "h3";
   /** true 면 Pinned 글을 이미지 위에 크게 띄우는 형태로 그린다 */
   pinnedStyle?: boolean;
-  /** 썸네일을 숨긴다 (아카이브처럼 목록만 훑는 화면) */
-  hideImage?: boolean;
   /** 같은 글이 한 페이지에 두 번 나올 때 전환 이름 충돌을 피하는 구분자.
       view-transition-name 이 중복되면 브라우저가 전환을 아예 취소한다. */
   scope?: string;
@@ -28,11 +26,10 @@ const {
   body,
   filePath,
   pinnedStyle = false,
-  hideImage = false,
   scope,
 } = Astro.props;
 
-const { title, description, heroImage, featured, tags, ...props } = data;
+const { title, description, heroImage, featured, tags, series, ...props } = data;
 
 const url = getPostUrl(id, filePath, Astro.currentLocale);
 
@@ -51,18 +48,16 @@ const transitionName = scope
 const isWide = isPinned && pinnedStyle;
 ---
 
-<li class="group my-8" data-tags={tags.join("|")}>
+<li class="group my-8" data-tags={tags.join("|")} data-series={series?.trim()}>
   <div
     class:list={[
-      hideImage
-        ? null
-        : isWide
-          ? "flex flex-col gap-3"
-          : "grid gap-4 sm:grid-cols-[1.5fr_3.5fr]",
+      isWide
+        ? "flex flex-col gap-3"
+        : "grid gap-4 sm:grid-cols-[1.5fr_3.5fr]",
     ]}
   >
     {
-      !hideImage && (
+      (
         <a
           href={url}
           class:list={["block", !isWide && "sm:col-start-1 sm:row-start-1"]}
@@ -85,7 +80,7 @@ const isWide = isPinned && pinnedStyle;
       )
     }
 
-    <div class:list={[!hideImage && !isWide && "sm:col-start-2 sm:row-start-1"]}>
+    <div class:list={[!isWide && "sm:col-start-2 sm:row-start-1"]}>
       <div class="card-head">
       <div class="flex items-start justify-between gap-3">
         <a

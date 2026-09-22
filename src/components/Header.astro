@@ -77,21 +77,12 @@ const isActive = (path: string) => {
         <li class="col-span-2">
           <a
             href={getRelativeLocaleUrl(locale, "posts")}
-            class:list={{ "active-nav": isActive("/posts") }}
-          >
-            {t.nav.posts}
-          </a>
-        </li>
-        {/* 넓은 화면에서는 양옆 레일이 Series 와 Tags 를 담당한다.
-            레일이 사라지는 폭(xl 미만)에서만 헤더에 내보낸다. */}
-        <li class="col-span-2 xl:hidden">
-          <a
-            href={getRelativeLocaleUrl(locale, "series")}
             class:list={{
-              "active-nav": isActive("/series") || isActive("/tags"),
+              "active-nav":
+                isActive("/posts") || isActive("/tags") || isActive("/series"),
             }}
           >
-            {t.nav.series}
+            {t.nav.posts}
           </a>
         </li>
         <li class="col-span-2">

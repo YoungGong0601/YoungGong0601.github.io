@@ -6,12 +6,12 @@ import PostLayout from "@/layouts/PostLayout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Datetime from "@/components/Datetime.astro";
+import PostList from "@/components/PostList.astro";
 import Tag from "@/components/Tag.astro";
 import { getPostSlug, getPostUrl } from "@/utils/getPostPaths";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { slugifyStr } from "@/utils/slugify";
 import { toTransitionName } from "@/utils/toTransitionName";
-import { defaultImage } from "@/utils/defaultImage";
 import { readingStats } from "@/utils/readingTime";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import EditPost from "./_components/EditPost.astro";
@@ -167,42 +167,13 @@ const ogImage = ogImageUrl
         </button>
       </div>
 
-      <ul id="post-rail-list" data-filter="all" class="flex flex-col gap-3">
-        {
-          railPosts.map(entry => (
-            <li
-              data-current={entry.id === post.id ? "true" : null}
-              data-in-series={
-                seriesName && entry.data.series?.trim() === seriesName
-                  ? "true"
-                  : null
-              }
-            >
-              <a
-                href={getPostUrl(entry.id, entry.filePath, Astro.currentLocale)}
-                class:list={[
-                  "grid grid-cols-[2.5rem_1fr] items-center gap-2.5 text-sm leading-snug",
-                  entry.id === post.id
-                    ? "text-accent font-semibold"
-                    : "text-muted-foreground hover:text-accent",
-                ]}
-              >
-                <Image
-                  src={entry.data.heroImage ?? defaultImage(entry.id)}
-                  alt=""
-                  width={64}
-                  height={64}
-                  quality={45}
-                  loading="lazy"
-                  decoding="async"
-                  class="aspect-square w-full rounded-md object-cover"
-                />
-                <span>{entry.data.title}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      <PostList
+        id="post-rail-list"
+        data-filter="all"
+        posts={railPosts}
+        currentId={post.id}
+        {seriesName}
+      />
     </aside>
   </div>
 

@@ -6,27 +6,30 @@ import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import PostBrowser from "@/components/PostBrowser.astro";
 import Footer from "@/components/Footer.astro";
-import { getSeries } from "@/utils/taxonomy";
+import { getTags } from "@/utils/taxonomy";
+import { useTranslations } from "@/i18n";
 import config from "@/config";
 
-// 시리즈 주소도 마찬가지로 DEVLOG 를 그 시리즈로 좁혀 연 것이다.
+// 태그 주소는 DEVLOG 를 그 태그로 좁혀 연 것이다. 화면은 하나뿐이다.
 export const getStaticPaths = (async () => {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
 
-  return getSeries(posts).map(({ name, slug }) => ({
-    params: { series: slug },
-    props: { name, posts },
+  return getTags(posts).map(({ name, slug }) => ({
+    params: { tag: slug },
+    props: { tagName: name, posts },
   }));
 }) satisfies GetStaticPaths;
 
-const { name, posts } = Astro.props;
+const { tagName, posts } = Astro.props;
+
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
 ---
 
-<Layout title={`${name} | ${config.site.title}`}>
+<Layout title={`${t.pages.tagTitle}: ${tagName} | ${config.site.title}`}>
   <Header />
   <Breadcrumb />
 
-  <PostBrowser {posts} activeSeries={name} />
+  <PostBrowser {posts} activeTag={tagName} />
 
   <Footer />
 </Layout>
