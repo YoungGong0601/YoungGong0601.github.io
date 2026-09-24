@@ -10,7 +10,7 @@
 Mail: [loveleter1@gmail.com](mailto:loveleter1@gmail.com)
 
 <p align="center">
-  <a href="https://younggong0601.github.io/posts"><img src="https://img.shields.io/badge/DEVLOG-younggong0601.github.io-2563EB?style=for-the-badge&labelColor=1E40AF" alt="DEVLOG"></a>
+  <a href="https://younggong0601.github.io"><img src="https://img.shields.io/badge/DEVLOG-younggong0601.github.io-2563EB?style=for-the-badge&labelColor=1E40AF" alt="DEVLOG"></a>
 </p>
 
 <p align="center">
