@@ -2,7 +2,7 @@
 
 **Unity Client Developer & System Developer**
 
-> Minimal Design, Maximal Fun.
+> Minimal Design, Maximal Fun.\
 > 확장성과 유연성을 설계하는 Unity 클라이언트 개발자
 
 개발하며 배운 것과 겪은 일을 기록합니다.
