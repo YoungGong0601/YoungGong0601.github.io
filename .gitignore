@@ -34,3 +34,6 @@ compose.override.yaml
 
 # obsidian vault
 .obsidian/
+
+# remarkObsidian 이 블로그 영상을 복사해 둔다
+public/media

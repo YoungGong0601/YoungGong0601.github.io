@@ -5,7 +5,7 @@ import type { CollectionEntry } from "astro:content";
 import type { HTMLAttributes } from "astro/types";
 import { Image } from "astro:assets";
 import { getPostUrl } from "@/utils/getPostPaths";
-import { defaultImage } from "@/utils/defaultImage";
+import { postThumbnail } from "@/utils/defaultImage";
 
 type Props = {
   posts: CollectionEntry<"posts">[];
@@ -37,7 +37,7 @@ const { posts, currentId, seriesName, ...attrs } = Astro.props;
           ]}
         >
           <Image
-            src={entry.data.heroImage ?? defaultImage(entry.id)}
+            src={postThumbnail(entry)}
             alt=""
             width={64}
             height={64}

@@ -4,7 +4,7 @@ import { Image } from "astro:assets";
 import IconPin from "@/assets/icons/IconPin.svg";
 import { getPostUrl } from "@/utils/getPostPaths";
 import { toTransitionName } from "@/utils/toTransitionName";
-import { defaultImage } from "@/utils/defaultImage";
+import { postThumbnail } from "@/utils/defaultImage";
 import { readingStats } from "@/utils/readingTime";
 import Datetime from "./Datetime.astro";
 import Tag from "./Tag.astro";
@@ -28,12 +28,12 @@ const {
   scope,
 } = Astro.props;
 
-const { title, description, heroImage, featured, tags, series, ...props } = data;
+const { title, description, featured, tags, series, ...props } = data;
 
 const url = getPostUrl(id, filePath, Astro.currentLocale);
 
 // 썸네일이 없는 글은 생성해둔 기본 이미지를 쓴다
-const thumbnail = heroImage ?? defaultImage(id);
+const thumbnail = postThumbnail(Astro.props);
 
 const isPinned = featured === true;
 

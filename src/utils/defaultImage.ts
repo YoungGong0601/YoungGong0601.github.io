@@ -47,3 +47,38 @@ export function defaultImage(key: string): ImageMetadata {
   }
   return DEFAULTS[hash % DEFAULTS.length];
 }
+
+/** 블로그 폴더 안의 이미지. 본문 경로를 실제 이미지로 바꿀 때 쓴다 */
+const BODY_IMAGES = import.meta.glob<ImageMetadata>(
+  "/src/content/blog/**/*.{jpg,jpeg,png,webp,gif,avif}",
+  { eager: true, import: "default" }
+);
+
+/**
+ * 글 목록에 쓸 썸네일. heroImage → 본문에 처음 나오는 이미지 → 기본 이미지 순.
+ * 영상이나 바깥 주소는 BODY_IMAGES 에 없으니 저절로 건너뛰고 다음 이미지를 본다.
+ */
+export function postThumbnail(post: {
+  id: string;
+  body?: string;
+  filePath?: string;
+  data: { heroImage?: ImageMetadata };
+}): ImageMetadata {
+  if (post.data.heroImage) return post.data.heroImage;
+
+  if (post.body && post.filePath) {
+    const dir = post.filePath.replace(/\\/g, "/").replace(/[^/]*$/, "");
+    for (const [, url] of post.body.matchAll(/!\[[^\]]*\]\(([^)\s]+)/g)) {
+      let path: string;
+      try {
+        path = decodeURIComponent(new URL(url, `file:///${dir}`).pathname);
+      } catch {
+        continue;
+      }
+      const image = BODY_IMAGES[path];
+      if (image) return image;
+    }
+  }
+
+  return defaultImage(post.id);
+}

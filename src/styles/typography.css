@@ -259,3 +259,10 @@
   height: 100%;
   border: 0;
 }
+
+/* 옵시디언에서 넣은 로컬 영상 파일 (remarkObsidian 이 만든다) */
+video {
+  width: 100%;
+  margin-block: 1.5rem;
+  border-radius: 0.75rem;
+}
