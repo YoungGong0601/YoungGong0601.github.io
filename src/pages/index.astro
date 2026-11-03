@@ -1,236 +1,181 @@
 ---
-import character from "@/assets/images/character.png";
-import heroSample from "@/assets/images/home-hero.jpg";
-import Card from "@/components/Card.astro";
-import Footer from "@/components/Footer.astro";
-import Header from "@/components/Header.astro";
-import PostList from "@/components/PostList.astro";
-import Rail from "@/components/Rail.astro";
-import Socials from "@/components/Socials.astro";
-import FilterList from "@/components/FilterList.astro";
+import character from "@/assets/images/character.gif";
 import config from "@/config";
-import { useTranslations } from "@/i18n";
 import Layout from "@/layouts/Layout.astro";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { getSeries, getTags } from "@/utils/taxonomy";
-import { Image } from "astro:assets";
-import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 
-const { socials } = config;
-
 const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
 
-const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const homePath = getRelativeLocaleUrl(locale, "");
-
-// 아래 값들은 모두 실제 글에서 계산한다.
-const published = posts.filter(({ data }) => !data.draft);
-
-const allTags = getTags(posts);
-const seriesList = getSeries(posts);
-
-// 좌측 버튼. href 가 없으면 자리만 잡아둔 버튼이다.
-const shortcuts = [
+const links = [
     {
-        label: "포트폴리오",
-        href: "https://younggong0601.notion.site/_-3d895708e15a80648c7bf4d2957ce5f7",
-        external: true,
-        primary: false,
+        label: "Portfolio",
+        desc: "만든 게임과 프로젝트",
+        href: config.socials.find(s => s.name === "notion")?.url,
     },
-    // primary 는 강조색으로 채운다. 이 사이트의 본진이라 눈에 먼저 들어와야 한다.
     {
-        label: "DEVLOG",
-        href: getRelativeLocaleUrl(locale, "posts"),
-        external: false,
-        primary: true,
+        label: "Blog",
+        desc: "개발하며 남긴 기록",
+        href: getRelativeLocaleUrl(locale, "blog"),
     },
-    // { label: "준비 중", href: null },
-    // { label: "준비 중", href: null },
 ];
-
-const lastUpdated = sortedPosts[0]?.data.pubDatetime;
-const lastUpdatedText = lastUpdated
-    ? `${lastUpdated.getFullYear()}.${String(lastUpdated.getMonth() + 1).padStart(2, "0")}.${String(lastUpdated.getDate()).padStart(2, "0")}`
-    : "";
 ---
 
-<Layout kind="list">
-    <Header />
-
-    {/* 좌측 레일: 글 목록 */}
-    <Rail side="start" label="DEVLOG">
-        <section class="relative flex h-full flex-col">
-            <p class="text-muted-foreground mb-3 shrink-0 text-xs">DEVLOG</p>
-            <div class="scroll-box min-h-0 flex-1 pb-4 pe-3">
-                <PostList posts={sortedPosts} />
-            </div>
-        </section>
-    </Rail>
-
-    {/* 우측 레일: 시리즈와 태그 */}
-    <Rail side="end" label="Series, Tags">
-        <div class="flex h-full flex-col">
-            {
-                seriesList.length > 0 && (
-                    <section class="shrink-0">
-                        <p class="text-muted-foreground mb-3 text-xs">Series</p>
-                        <FilterList
-                            kind="series"
-                            items={seriesList}
-                            mode="link"
-                        />
-                    </section>
-                )
-            }
-
-            {
-                allTags.length > 0 && (
-                    <section class="relative mt-8 flex min-h-0 flex-1 flex-col">
-                        <p class="text-muted-foreground mb-3 shrink-0 text-xs">
-                            Tags
-                        </p>
-                        <div class="scroll-box min-h-0 flex-1 pb-4 pe-3">
-                            <FilterList
-                                kind="tag"
-                                items={allTags}
-                                mode="link"
-                            />
-                        </div>
-                    </section>
-                )
-            }
-        </div>
-    </Rail>
+<Layout>
+    <canvas
+        id="ascii-light"
+        aria-hidden="true"
+        class="pointer-events-none fixed inset-0 size-full"></canvas>
 
     <main
         id="main-content"
-        data-layout="index"
-        data-home-path={homePath}
-        class="app-layout my-1"
+        class="landing relative mx-auto flex min-h-dvh w-full max-w-2xl flex-col justify-center px-4 py-16"
     >
-        {/* 상단 히어로 이미지 (샘플). heroSample 만 바꾸면 된다. */}
-        <Image
-            src={heroSample}
-            alt=""
-            width={1600}
-            height={500}
-            class="mt-3 aspect-16/5 w-full rounded-xl object-cover"
-        />
-
-        <section id="hero" class="border-border border-b pt-10 pb-10">
-            <div class="flex items-center gap-5">
-                {/* 픽셀 아트라 확대해도 뭉개지지 않게 렌더링을 지정한다 */}
-                <Image
-                    src={character}
-                    alt=""
-                    width={160}
-                    height={160}
-                    class="border-border size-20 shrink-0 rounded-full border object-contain [image-rendering:pixelated]"
-                />
-                <div>
-                    <h1 class="text-4xl font-semibold sm:text-5xl">홍령기</h1>
-                    <p class="text-muted-foreground mt-1 text-sm">
-                        Unity Client Developer &amp; System Developer
-                    </p>
-                </div>
-            </div>
-
-            <p class="mt-5 text-xl sm:text-2xl">Minimal Design, Maximal Fun.</p>
-
-            <p class="mt-3 max-w-prose leading-relaxed">
-                안녕하세요. 저는 Unity 기반의 클라이언트 개발과 시스템 개발을
-                주로 하는 개발자입니다.
+        <header class="flex flex-col items-center text-center">
+            <img
+                src={character.src}
+                alt=""
+                width={192}
+                height={192}
+                class="character size-24 object-contain [image-rendering:pixelated]"
+            />
+            <h1 class="mt-4 text-3xl font-bold">홍령기</h1>
+            <p class="text-muted-foreground mt-1 text-sm">
+                Unity Client Developer &amp; System Developer
             </p>
-            <p class="mt-1 max-w-prose leading-relaxed">
-                시스템을 설계하고 확장성과 유연성을 목표로 두는 개발을
-                지향합니다.
-            </p>
+        </header>
 
-            <dl
-                class="text-muted-foreground mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm"
-            >
-                <div class="flex gap-2">
-                    <dt>글</dt>
-                    <dd class="text-foreground font-semibold">
-                        {published.length}편
-                    </dd>
-                </div>
-                <div class="flex gap-2">
-                    <dt>태그</dt>
-                    <dd class="text-foreground font-semibold">
-                        {allTags.length}개
-                    </dd>
-                </div>
-                {
-                    lastUpdatedText && (
-                        <div class="flex gap-2">
-                            <dt>최근 글</dt>
-                            <dd class="text-foreground font-semibold">
-                                {lastUpdatedText}
-                            </dd>
-                        </div>
-                    )
-                }
-            </dl>
-
-            <div class="mt-7 grid grid-cols-2 gap-3">
-                {
-                    shortcuts.map(item =>
-                        item.href ? (
-                            <a
-                                href={item.href}
-                                target={item.external ? "_blank" : null}
-                                rel={item.external ? "noopener noreferrer" : null}
-                                class:list={[
-                                    "group flex items-center justify-center gap-1.5 border px-4 py-2 text-center text-sm transition-colors duration-300",
-                                    item.primary
-                                        ? "border-accent bg-accent text-accent-foreground hover:text-accent font-medium tracking-wide hover:bg-transparent"
-                                        : "border-border hover:border-accent hover:text-accent",
-                                ]}
-                            >
-                                {item.label}
-                                {item.primary && (
-                                    <span
-                                        aria-hidden="true"
-                                        class="transition-transform duration-300 group-hover:translate-x-1"
-                                    >
-                                        →
-                                    </span>
-                                )}
-                            </a>
-                        ) : (
-                            <span class="border-border text-muted-foreground cursor-default border border-dashed px-4 py-2 text-center text-sm">
-                                {item.label}
+        <nav class="mt-12 grid grid-cols-2 gap-3 sm:gap-4" aria-label="바로가기">
+            {
+                links.map(({ label, desc, href }) => {
+                    const external = href?.startsWith("http");
+                    return (
+                        <a
+                            href={href}
+                            target={external ? "_blank" : null}
+                            rel={external ? "noopener noreferrer" : null}
+                            class="panel focus-visible:outline-accent flex flex-col p-5 focus-visible:outline-2 focus-visible:outline-offset-2 sm:p-7"
+                        >
+                            <span class="panel-title text-2xl font-bold tracking-tight sm:text-4xl">
+                                {label}
                             </span>
-                        )
-                    )
-                }
-            </div>
+                            <span class="mt-1 text-sm">{desc}</span>
+                        </a>
+                    );
+                })
+            }
+        </nav>
 
-            <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
-                {socials.length > 0 && <Socials />}
-            </div>
-        </section>
-
-        {
-            featuredPosts.length > 0 && (
-                <section id="featured" class="pt-10 pb-6">
-                    <h2 class="text-2xl font-semibold tracking-wide">
-                        {t.home.featured}
-                    </h2>
-                    <ul class="grid gap-x-6 sm:grid-cols-2">
-                        {featuredPosts.map((data) => (
-                            <Card variant="h3" pinnedStyle {...data} />
-                        ))}
-                    </ul>
-                </section>
-            )
-        }
+        <p class="text-muted-foreground mt-10 text-center text-sm">
+            Minimal Design, Maximal Fun.
+        </p>
     </main>
-
-    <Footer />
 </Layout>
+
+<script>
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const character = document.querySelector<HTMLElement>(".character")!;
+    document.querySelectorAll(".panel").forEach(panel =>
+        panel.addEventListener("mouseenter", () => {
+            if (still) return;
+            character.animate(
+                [{ translate: "0 0" }, { translate: "0 -6px", offset: 0.4 }, { translate: "0 0" }],
+                { duration: 150, easing: "ease-out" }
+            );
+        })
+    );
+
+    const canvas = document.querySelector<HTMLCanvasElement>("#ascii-light")!;
+    const ctx = canvas.getContext("2d")!;
+    const RAMP = " .:-=+*#%@";
+    const CELL = 14;
+
+    function resize() {
+        const dpr = devicePixelRatio || 1;
+        canvas.width = innerWidth * dpr;
+        canvas.height = innerHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.font = `${CELL}px "IBM Plex Mono", ui-monospace, monospace`;
+        ctx.textBaseline = "top";
+        ctx.globalAlpha = 0.35;
+    }
+
+    function hexToRgb(hex: string) {
+        const n = parseInt(hex.trim().slice(1), 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function draw(time: number) {
+        const w = innerWidth;
+        const h = innerHeight;
+        const t = time / 1000;
+        const a = { x: w * (0.5 - 0.3 * Math.cos(t * 0.13)), y: h * (0.5 - 0.25 * Math.cos(t * 0.09)) };
+        const b = { x: w * (0.5 + 0.3 * Math.cos(t * 0.11)), y: h * (0.5 + 0.25 * Math.cos(t * 0.15)) };
+        const radius = Math.max(w, h) * 0.45;
+        const glow = (x: number, y: number, l: typeof a) =>
+            Math.exp(-2.5 * (Math.hypot(x - l.x, y - l.y) / radius) ** 2);
+
+        const root = document.documentElement;
+        const colorA = hexToRgb(getComputedStyle(root).getPropertyValue("--accent"));
+        // 개선 필요: 남색도 theme.css 변수로
+        const colorB = hexToRgb(root.dataset.theme === "dark" ? "#4a74d4" : "#14357f");
+
+        ctx.clearRect(0, 0, w, h);
+        for (let y = 0; y < h; y += CELL) {
+            for (let x = 0; x < w; x += CELL * 0.6) {
+                const ea = glow(x, y, a);
+                const eb = glow(x, y, b);
+                const level = Math.floor((1 - Math.exp(-1.6 * (ea + eb))) * RAMP.length);
+                if (level <= 0) continue;
+                const k = eb / (ea + eb);
+                // 개선 필요: 칸마다 색 문자열을 새로 만듦
+                ctx.fillStyle = `rgb(${colorA.map((c, i) => c + (colorB[i] - c) * k).join(",")})`;
+                ctx.fillText(RAMP[Math.min(level, RAMP.length - 1)], x, y);
+            }
+        }
+    }
+
+    let last = 0;
+    function loop(time: number) {
+        // 개선 필요: 15fps 고정
+        if (time - last >= 66) {
+            last = time;
+            draw(time);
+        }
+        requestAnimationFrame(loop);
+    }
+
+    resize();
+    addEventListener("resize", () => {
+        resize();
+        draw(last);
+    });
+    if (still) draw(0);
+    else requestAnimationFrame(loop);
+</script>
+
+<style>
+    .panel {
+        transition:
+            background-color 200ms,
+            translate 200ms;
+    }
+    .panel:hover,
+    .panel:focus-visible {
+        translate: 0 -4px;
+        background-color: color-mix(in srgb, var(--accent) 8%, transparent);
+    }
+    .panel:hover .panel-title {
+        color: var(--accent);
+    }
+
+    .landing:has(.panel:last-child:hover) .character {
+        transform: scaleX(-1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .panel {
+            transition: none;
+        }
+    }
+</style>

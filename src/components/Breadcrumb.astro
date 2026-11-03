@@ -25,6 +25,7 @@ const decodeSegment = (value: string) => {
 };
 
 const navLabels: Record<string, string> = {
+  blog: "Blog",
   posts: t.nav.posts,
   about: t.nav.about,
   archives: t.nav.archives,
@@ -59,7 +60,7 @@ const navLabels: Record<string, string> = {
         ) : (
           <li class="flex items-center gap-x-1">
             <a
-              href={getRelativeLocaleUrl(locale, breadcrumb)}
+              href={getRelativeLocaleUrl(locale, breadcrumbList.slice(0, index + 1).join("/"))}
               class="capitalize opacity-70"
             >
               {navLabels[breadcrumb] ?? decodeSegment(breadcrumb)}

@@ -41,7 +41,7 @@ const icon = ["opacity-80", size === "sm" ? "size-4" : "size-5"];
       </button>
     ) : (
       <a
-        href={`${getRelativeLocaleUrl(locale, "posts")}?tag=${encodeURIComponent(tagName)}`}
+        href={`${getRelativeLocaleUrl(locale, "blog/posts")}?tag=${encodeURIComponent(tagName)}`}
         class:list={shape}
       >
         <IconHash class:list={icon} />

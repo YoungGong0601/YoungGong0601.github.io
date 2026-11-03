@@ -39,7 +39,10 @@ function loadAssets() {
     const [regular, bold, avatar] = await Promise.all([
       fs.readFile(`${FONT_DIR}/Pretendard-Regular.woff`),
       fs.readFile(`${FONT_DIR}/Pretendard-Bold.woff`),
-      fs.readFile(AVATAR_PATH),
+      // 픽셀 아트라 최근접 보간으로 미리 키워 둔다. 안 그러면 카드에서 뭉개진다
+      fs.readFile(AVATAR_PATH).then(buf =>
+        sharp(buf).resize(176, 176, { kernel: "nearest" }).png().toBuffer()
+      ),
     ]);
     return {
       regular,
